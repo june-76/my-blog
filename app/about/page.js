@@ -3,18 +3,17 @@
 export default function AboutPage() {
     return (
         <div>
-            <h1>About Me</h1>
-            <p>This is a brief introduction about me.</p>
-            <p>
-                Check out my GitHub:{" "}
-                <a
-                    href="https://github.com/yourusername"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    GitHub
-                </a>
-            </p>
+            <h1>안녕하세요</h1>
+            <p>aaaaaaaaaaa</p>
+            <p>bbbbbbbbbbbbbbb</p>
+            <p>소개소개소개</p>
+            <a
+                href="https://github.com/fromhelianthus"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                GitHub (Click!)
+            </a>
         </div>
     );
 }

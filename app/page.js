@@ -26,8 +26,6 @@ export default async function HomePage() {
 
     return (
         <div>
-            <h1>My Blog</h1>
-            <p>Here are some blog posts...</p>
             <ul>
                 {posts.map((post) => (
                     <li key={post.slug}>

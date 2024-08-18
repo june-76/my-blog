@@ -1,12 +1,12 @@
+// app/posts/[slug]/page.js
+
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
-import { marked } from "marked";
 
 export default async function PostPage({ params }) {
     const { slug } = params;
     const filePath = path.join(process.cwd(), "content", `${slug}.md`);
-
     const fileContent = fs.readFileSync(filePath, "utf-8");
     const { data: frontmatter, content } = matter(fileContent);
 
@@ -14,18 +14,12 @@ export default async function PostPage({ params }) {
         <div>
             <h1>{frontmatter.title}</h1>
             <p>{frontmatter.date}</p>
-            <div dangerouslySetInnerHTML={{ __html: marked(content) }}></div>
+            <div dangerouslySetInnerHTML={{ __html: content }} />
         </div>
     );
 }
 
-// 서버에서 직접 데이터 패칭
-export async function generateStaticParams() {
-    const files = fs.readdirSync(path.join(process.cwd(), "content"));
-
-    const paths = files.map((filename) => ({
-        slug: filename.replace(".md", ""),
-    }));
-
-    return paths.map((path) => ({ params: path }));
-}
+// pages/posts/[slug]/page.js
+// Next.js 13의 새로운 앱 디렉토리 구조에서는 props가 params로 전달되며
+// pages 디렉토리에서는 getStaticPaths와 getStaticProps를 사용할 수 있습니다.
+// 기존 방법에 맞춰 대체하여 사용할 수 있습니다.

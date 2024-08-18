@@ -1,11 +1,7 @@
-# metadata
-
 ---
-
-title: "My First Post"
-date: "2024-08-16"
-description: "This is my first post using Markdown in Next.js!"
-
+title: "글이 적어도 두 개는 있어야지"
+date: "2024-08-18"
+description: "테스트 테스트~"
 ---
 
 # Welcome to my blog

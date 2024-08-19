@@ -24,18 +24,32 @@ export default async function HomePage() {
         };
     });
 
+    // 유효한 포스트만 필터링
+    const validPosts = posts.filter(post => {
+        return post.title !== "Untitled" && 
+               post.title.trim() !== "" && 
+               post.date !== "No Date" && 
+               post.date.trim() !== "" && 
+               post.description !== "No Description" && 
+               post.description.trim() !== "";
+    });
+
     return (
         <div>
             <ul>
-                {posts.map((post) => (
-                    <li key={post.slug}>
-                        <a href={`/posts/${post.slug}`}>
-                            <h2>{post.title}</h2>
-                            <p>{post.date}</p>
-                            <p>{post.description}</p>
-                        </a>
-                    </li>
-                ))}
+                {validPosts.length === 0 ? (
+                    <li>작성된 포스트가 없습니다.</li>
+                ) : (
+                    validPosts.map((post) => (
+                        <li key={post.slug}>
+                            <a href={`/posts/${post.slug}`}>
+                                <h2>{post.title}</h2>
+                                <p>{post.date}</p>
+                                <p>{post.description}</p>
+                            </a>
+                        </li>
+                    ))
+                )}
             </ul>
         </div>
     );

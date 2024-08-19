@@ -1,7 +1,8 @@
 ---
 title: "글이 적어도 두 개는 있어야지"
 date: "2024-08-18"
-description: "테스트 테스트~"
+description: "사이드 프로젝트 만들자"
+category: "side_project"
 ---
 
 # Welcome to my blog

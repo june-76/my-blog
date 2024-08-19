@@ -1,7 +1,8 @@
 ---
 title: "블로그를 만들어보자"
 date: "2024-08-16"
-description: "아 정말 재밌겠다~~~"
+description: "일기~"
+category: "daily"
 ---
 
 # Welcome to my blog

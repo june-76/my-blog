@@ -1,11 +1,13 @@
 // app/components/Header.js
+"use client"; // 클라이언트 컴포넌트로 설정
+
 import Link from "next/link";
 import "../globals.css";
 
-export default function Header() {
+export default function Header({ categories }) {
     return (
         <header>
-            <h1>my blog</h1>
+            <h1>MY BLOG ^^</h1>
             <nav>
                 <ul
                     style={{
@@ -21,7 +23,7 @@ export default function Header() {
                             href="/"
                             style={{ color: "#fff", textDecoration: "none" }}
                         >
-                            posts
+                            Home
                         </Link>
                     </li>
                     <li>
@@ -29,9 +31,19 @@ export default function Header() {
                             href="/about"
                             style={{ color: "#fff", textDecoration: "none" }}
                         >
-                            about
+                            About
                         </Link>
                     </li>
+                    {categories.map((category) => (
+                        <li key={category.slug}>
+                            <Link
+                                href={`/categories/${category.slug}`}
+                                style={{ color: "#fff", textDecoration: "none" }}
+                            >
+                                {category.name}
+                            </Link>
+                        </li>
+                    ))}
                 </ul>
             </nav>
         </header>

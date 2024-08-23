@@ -1,8 +1,8 @@
-// app/page.js
-
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
+import { remark } from "remark";
+import html from "remark-html";
 
 export default async function HomePage() {
     // 데이터 패칭
@@ -16,11 +16,18 @@ export default async function HomePage() {
         );
         const { data: frontmatter } = matter(markdownWithMeta);
 
+        // 첫 번째 이미지 추출
+        const processedContent = remark().use(html).processSync(markdownWithMeta);
+        const contentHtml = processedContent.toString();
+        const firstImageMatch = contentHtml.match(/<img[^>]+src="([^">]+)"/);
+        const thumbnail = firstImageMatch ? firstImageMatch[1] : null;
+
         return {
             slug,
             title: frontmatter.title || "Untitled",
             date: frontmatter.date || "No Date",
             description: frontmatter.description || "No Description",
+            thumbnail, // 섬네일 추가
         };
     });
 
@@ -43,6 +50,13 @@ export default async function HomePage() {
                     validPosts.map((post) => (
                         <li key={post.slug}>
                             <a href={`/posts/${post.slug}`}>
+                                {post.thumbnail && (
+                                    <img
+                                        src={post.thumbnail}
+                                        alt={`Thumbnail for ${post.title}`}
+                                        className="thumbnail" // CSS 클래스 추가
+                                    />
+                                )}
                                 <h2>{post.title}</h2>
                                 <p>{post.date}</p>
                                 <p>{post.description}</p>

@@ -5,10 +5,12 @@ description: "사이드 프로젝트 만들자"
 category: "side_project"
 ---
 
-# Welcome to my blog
+![섬네일 이미지](/thumbnail/dokukinoko2.jpg)
 
-This is my first post using Markdown in Next.js. I'm excited to start this journey!
+# 소제목1
 
-## What to expect
+블로그 완전 못생김김
 
-I'll be sharing various tutorials, insights, and personal experiences here.
+## 소제목2
+
+갈길이 너무 멀다네

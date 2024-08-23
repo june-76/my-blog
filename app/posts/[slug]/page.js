@@ -1,5 +1,4 @@
-// app/posts/[slug]/page.js
-
+// 기존 코드 유지
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";

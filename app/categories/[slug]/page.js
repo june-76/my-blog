@@ -1,9 +1,9 @@
-// app/categories/[slug]/page.js
-
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 import Link from "next/link";
+import { remark } from "remark";
+import html from "remark-html";
 
 const loadCategories = () => {
     const categoriesFilePath = path.join(process.cwd(), "content", "categories.json");
@@ -20,7 +20,18 @@ const loadPostsByCategory = (categorySlug) => {
             const filePath = path.join(postsDirectory, file);
             const fileContents = fs.readFileSync(filePath, "utf-8");
             const { data } = matter(fileContents);
-            return { ...data, slug: file.replace(/\.md$/, '') };
+
+            // 첫 번째 이미지 추출
+            const processedContent = remark().use(html).processSync(fileContents);
+            const contentHtml = processedContent.toString();
+            const firstImageMatch = contentHtml.match(/<img[^>]+src="([^">]+)"/);
+            const thumbnail = firstImageMatch ? firstImageMatch[1] : null;
+
+            return {
+                ...data,
+                slug: file.replace(/\.md$/, ''),
+                thumbnail, // 섬네일 추가
+            };
         })
         .filter(post => post.category === categorySlug);
 };
@@ -42,7 +53,16 @@ export default async function CategoryPage({ params }) {
             <ul>
                 {posts.map(post => (
                     <li key={post.slug}>
-                        <Link href={`/posts/${post.slug}`}>{post.title}</Link>
+                        <Link href={`/posts/${post.slug}`}>
+                            {post.thumbnail && (
+                                <img
+                                    src={post.thumbnail}
+                                    alt={`Thumbnail for ${post.title}`}
+                                    className="thumbnail" // CSS 클래스 추가
+                                />
+                            )}
+                            {post.title}
+                        </Link>
                     </li>
                 ))}
             </ul>

@@ -5,6 +5,8 @@ description: "일기~"
 category: "daily"
 ---
 
+![섬네일 이미지](/thumbnail/dokukinoko1.png)
+
 # Welcome to my blog
 
 This is my first post using Markdown in Next.js. I'm excited to start this journey!

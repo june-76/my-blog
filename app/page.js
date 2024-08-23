@@ -32,13 +32,15 @@ export default async function HomePage() {
     });
 
     // 유효한 포스트만 필터링
-    const validPosts = posts.filter(post => {
-        return post.title !== "Untitled" && 
-               post.title.trim() !== "" && 
-               post.date !== "No Date" && 
-               post.date.trim() !== "" && 
-               post.description !== "No Description" && 
-               post.description.trim() !== "";
+    const validPosts = posts.filter((post) => {
+        return (
+            post.title !== "Untitled" &&
+            post.title.trim() !== "" &&
+            post.date !== "No Date" &&
+            post.date.trim() !== "" &&
+            post.description !== "No Description" &&
+            post.description.trim() !== ""
+        );
     });
 
     return (
@@ -48,7 +50,7 @@ export default async function HomePage() {
                     <li>작성된 포스트가 없습니다.</li>
                 ) : (
                     validPosts.map((post) => (
-                        <li key={post.slug}>
+                        <li key={post.slug} className="post-item">
                             <a href={`/posts/${post.slug}`}>
                                 {post.thumbnail && (
                                     <img
@@ -58,7 +60,7 @@ export default async function HomePage() {
                                     />
                                 )}
                                 <h2>{post.title}</h2>
-                                <p>{post.date}</p>
+                                <p className="date">{post.date}</p>
                                 <p>{post.description}</p>
                             </a>
                         </li>

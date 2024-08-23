@@ -91,6 +91,27 @@ nav a:hover {
     text-decoration: underline; /* 링크에 마우스를 올렸을 때 밑줄 추가 */
 }
 
+/* 게시글 목록 스타일 */
+.post-item {
+    margin-bottom: 20px; /* 게시글 사이의 간격 */
+    padding: 15px; /* 패딩 추가 */
+    border: 1px solid #ddd; /* 경계선 추가 */
+    border-radius: 8px; /* 경계선 둥글게 */
+    background-color: #f9f9f9; /* 배경색 추가 */
+}
+
+/* 제목 스타일 */
+.post-item h2 {
+    margin: 0;
+    font-size: 1.5em;
+}
+
+/* 날짜 스타일 */
+.post-item p.date {
+    color: #888;
+    font-size: 0.9em;
+}
+
 main {
     padding: 20px;
     max-width: 800px;

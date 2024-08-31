@@ -124,3 +124,26 @@ footer {
     padding: 10px 0;
     text-align: center; /* 텍스트 가운데 정렬 */
 }
+
+
+/* 표 */
+table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+  }
+  
+  th {
+    background-color: #f4f4f4;
+    color: #333;
+  }
+  
+  tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  

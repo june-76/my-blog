@@ -3,6 +3,7 @@ import path from "path";
 import matter from "gray-matter";
 import { remark } from "remark";
 import html from "remark-html";
+import { Analytics } from "@vercel/analytics/react"
 
 export default async function HomePage() {
     // 데이터 패칭
@@ -45,6 +46,7 @@ export default async function HomePage() {
 
     return (
         <div>
+            <Analytics />
             <ul>
                 {validPosts.length === 0 ? (
                     <li>작성된 포스트가 없습니다.</li>

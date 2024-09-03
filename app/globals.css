@@ -62,7 +62,7 @@ body {
 
 /* 추가 스타일 */
 header {
-    background-color: #333; /* 어두운 회색 */
+    background-color: #b7c06a; /* 헤더 색상. 컨셉 컬러가 됩니다. */
     color: #fff; /* 헤더 텍스트 색상 */
     padding: 10px 0;
     text-align: center; /* 중앙 정렬 */

@@ -7,7 +7,7 @@ import "../globals.css";
 export default function Header({ categories }) {
     return (
         <header>
-            <h1>MY BLOG ^^</h1>
+            <h1 style={{ marginRight: "60%", color: "#fff" }}>MY BLOG ^^</h1>
             <nav>
                 <ul
                     style={{

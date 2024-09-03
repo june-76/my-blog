@@ -5,7 +5,7 @@ description: "사이드 프로젝트 만들자"
 category: "side_project"
 ---
 
-![섬네일 이미지](/thumbnail/dokukinoko2.jpg)
+![섬네일 이미지](/thumbnail/blue.png)
 
 # 소제목1
 

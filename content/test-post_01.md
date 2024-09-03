@@ -5,7 +5,7 @@ description: "일기~"
 category: "daily"
 ---
 
-![섬네일 이미지](/thumbnail/dokukinoko1.png)
+![섬네일 이미지](/thumbnail/yellow.png)
 
 # Welcome to my blog
 

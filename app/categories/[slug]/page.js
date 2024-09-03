@@ -1,3 +1,5 @@
+// /app/category/page.js
+
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
@@ -49,10 +51,10 @@ export default async function CategoryPage({ params }) {
     return (
         <div>
             <h1>{currentCategory.name}</h1>
-            <p>{currentCategory.description}</p>
+            <p className="category-description">{currentCategory.description}</p>
             <ul>
                 {posts.map(post => (
-                    <li key={post.slug}>
+                    <li key={post.slug} className="post-item">
                         <Link href={`/posts/${post.slug}`}>
                             {post.thumbnail && (
                                 <img

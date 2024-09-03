@@ -91,6 +91,14 @@ nav a:hover {
     text-decoration: underline; /* 링크에 마우스를 올렸을 때 밑줄 추가 */
 }
 
+/* 카테고리 탭 부제목 스타일 */
+.category-description {
+    font-size: 14px; /* Adjust font size as needed */
+    color: #888; /* Change text color */
+    margin: 0 0 10px 0; /* Add margin if necessary */
+}
+
+
 /* 게시글 목록 스타일 */
 .post-item {
     margin-bottom: 20px; /* 게시글 사이의 간격 */

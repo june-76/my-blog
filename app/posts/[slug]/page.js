@@ -35,11 +35,31 @@ export default async function PostPage({ params }) {
     const postCategory = categories.find(category => category.slug === frontmatter.category);
 
     return (
-        <div>
-            <h1>{frontmatter.title}</h1>
-            <p>{frontmatter.date}</p>
-            <p>카테고리: {postCategory ? postCategory.name : "카테고리 없음"}</p>
-            <div dangerouslySetInnerHTML={{ __html: marked(content) }} />
-        </div>
+        <section className="text-gray-600 body-font">
+            <div className="container px-5 py-24 mx-auto">
+                <div className="flex flex-wrap -m-4">
+                    <div className="p-4 md:w-2/3 mx-auto">
+                        <div className="h-full rounded-xl shadow-cla-blue bg-gradient-to-r from-indigo-50 to-blue-50 overflow-hidden">
+                            <div className="p-6">
+                                <h2 className="tracking-widest text-xs title-font font-medium text-gray-400 mb-1">
+                                    {postCategory ? postCategory.name : "카테고리 없음"}
+                                </h2>
+                                <h1 className="title-font text-2xl font-medium text-gray-600 mb-4">
+                                    {frontmatter.title}
+                                </h1>
+                                <p className="leading-relaxed text-gray-500 mb-4">
+                                    {frontmatter.date}
+                                </p>
+                                <div className="leading-relaxed text-gray-700">
+                                    <div
+                                        dangerouslySetInnerHTML={{ __html: marked(content) }}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     );
 }

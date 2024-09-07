@@ -22,42 +22,10 @@
     }
 }
 
-/* 기본 스타일 */
-body {
-    color: rgb(var(--foreground-rgb));
-    background-color: rgb(var(--background-start-rgb)); /* 단색 배경 */
-    font-family: "Orbit", sans-serif; /* 폰트 적용 */
-}
-
 @layer utilities {
     .text-balance {
         text-wrap: balance;
     }
-}
-
-/* 스타일 규칙 */
-.post-list {
-    list-style: none; /* 기본 리스트 스타일 제거 */
-    padding: 0; /* 패딩 제거 */
-}
-
-.post-item {
-    margin-bottom: 20px; /* 아이템 간격 */
-    padding: 10px; /* 아이템 패딩 */
-    border: 1px solid #ccc; /* 테두리 */
-    border-radius: 5px; /* 모서리 둥글게 */
-    transition: background-color 0.3s; /* 배경 색상 전환 효과 */
-}
-
-.post-item:hover {
-    background-color: #f9f9f9; /* 마우스 오버 시 배경 색상 변경 */
-}
-
-.thumbnail {
-    width: 150px; /* 원하는 너비 */
-    height: auto; /* 자동 높이 조정 */
-    margin-right: 10px; /* 오른쪽 마진 */
-    border-radius: 8px; /* 모서리 둥글게 */
 }
 
 /* 추가 스타일 */
@@ -122,12 +90,6 @@ nav a:hover {
 .post-item p.date {
     color: #888;
     font-size: 0.9em;
-}
-
-main {
-    padding: 20px;
-    max-width: 800px;
-    margin: 0 auto;
 }
 
 footer {

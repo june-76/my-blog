@@ -7,7 +7,16 @@ import "../globals.css";
 export default function Header({ categories }) {
     return (
         <header>
-            <h1 style={{ marginRight: "60%", color: "#fff" }}>MY BLOG ^^</h1>
+            <h1
+                style={{
+                    marginRight: "90%",
+                    color: "#fff",
+                    fontStyle: "italic",
+                    color: "#bbb",
+                }}
+            >
+                fromhelianthus
+            </h1>
             <nav>
                 <ul
                     style={{
@@ -38,7 +47,10 @@ export default function Header({ categories }) {
                         <li key={category.slug}>
                             <Link
                                 href={`/categories/${category.slug}`}
-                                style={{ color: "#fff", textDecoration: "none" }}
+                                style={{
+                                    color: "#fff",
+                                    textDecoration: "none",
+                                }}
                             >
                                 {category.name}
                             </Link>

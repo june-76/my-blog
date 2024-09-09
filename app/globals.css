@@ -10,9 +10,9 @@
 
 /* Root variables for theme management */
 :root {
-    --foreground-rgb: 0, 0, 0;
-    --background-start-rgb: 255, 255, 255;
-    --background-end-rgb: 255, 255, 255;
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 225, 225, 225;
+    --background-end-rgb: 210, 210, 210;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -32,7 +32,7 @@
 
 /* Shared header styles */
 header {
-    background-color: #696962;
+    background-color: #555555;
     color: #fff;
     padding: 10px 0;
     text-align: center;
@@ -40,6 +40,10 @@ header {
 
 header h1 {
     margin-bottom: 20px;
+}
+
+body {
+    background-color: rgb(var(--background-start-rgb));
 }
 
 nav ul {
@@ -62,12 +66,4 @@ nav a {
 
 nav a:hover {
     text-decoration: underline;
-}
-
-/* Footer styles */
-footer {
-    background-color: #f1f1f1;
-    color: #333;
-    padding: 10px 0;
-    text-align: center;
 }

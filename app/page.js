@@ -27,12 +27,14 @@ export default async function HomePage() {
         const firstImageMatch = contentHtml.match(/<img[^>]+src="([^">]+)"/);
         const thumbnail = firstImageMatch ? firstImageMatch[1] : null;
 
+        // 섬네일 추가
         return {
             slug,
             title: frontmatter.title || "Untitled",
+            category: frontmatter.category || "Uncategorized",
             date: frontmatter.date || "No Date",
             description: frontmatter.description || "No Description",
-            thumbnail, // 섬네일 추가
+            thumbnail,
         };
     });
 
@@ -58,9 +60,11 @@ export default async function HomePage() {
                         validPosts.map((post) => (
                             <div
                                 key={post.slug}
-                                className="relative flex-col bg-clip-border rounded-xl bg-transparent text-gray-700 shadow-none grid gap-2 item sm:grid-cols-2"
+                                className="relative flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-none grid gap-2 item sm:grid-cols-2"
                             >
-                                <div className="relative bg-clip-border rounded-xl overflow-hidden bg-white text-gray-700 shadow-lg m-0">
+                                <div className="relative bg-clip-border rounded-xl overflow-hidden bg-white text-gray-700 m-0 p-4">
+                                    {" "}
+                                    {/* 여기에 padding 추가 */}
                                     <img
                                         src={
                                             post.thumbnail ||
@@ -72,7 +76,7 @@ export default async function HomePage() {
                                 </div>
                                 <div className="p-6 px-2 sm:pr-6 sm:pl-4">
                                     <p className="block antialiased font-sans text-sm font-light leading-normal text-inherit mb-4 !font-semibold">
-                                        CATEGORY-1
+                                        {post.category}
                                     </p>
                                     <a
                                         href={`/posts/${post.slug}`}
@@ -84,14 +88,14 @@ export default async function HomePage() {
                                         {post.description}
                                     </p>
                                     <div className="flex items-center gap-4">
-                                        <img
-                                            src="https://via.placeholder.com/50"
+                                        {/* <img
+                                            src="https://avatars.githubusercontent.com/u/165984445?v=4"
                                             className="inline-block relative object-cover object-center !rounded-full w-12 h-12 rounded-lg"
                                             alt="Author"
-                                        />
+                                        /> */}
                                         <div>
                                             <p className="block antialiased font-sans text-base font-light leading-relaxed text-blue-gray-900 mb-0.5 !font-semibold">
-                                                Author Name
+                                                June
                                             </p>
                                             <p className="block antialiased font-sans text-sm leading-normal text-gray-700 font-normal">
                                                 {post.date}
@@ -104,19 +108,6 @@ export default async function HomePage() {
                     )}
                 </div>
             </section>
-            <br />
-            <a
-                href="https://www.material-tailwind.com/magic-ai"
-                target="_blank"
-            >
-                Generated with <b>Magic AI Blocks</b>
-            </a>{" "}
-            by{" "}
-            <a href="https://www.creative-tim.com/" target="_blank">
-                Creative Tim
-            </a>
-            .
-            <br /> <br />
             <Analytics />
         </>
     );

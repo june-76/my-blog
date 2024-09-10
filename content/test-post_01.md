@@ -5,7 +5,7 @@ description: "일기~"
 category: "daily"
 ---
 
-![섬네일 이미지](/thumbnail/yellow.png)
+![섬네일 이미지](/thumbnail/eric-han-WJ6fmN1D-h0-unsplash.jpg)
 
 # Welcome to my blog
 

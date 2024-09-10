@@ -13,6 +13,11 @@
     "name": "CS",
     "slug": "cs",
     "description": "컴퓨터공학 지식 및 알고리즘 풀이"
+  },
+  {
+    "name": "Test",
+    "slug": "test",
+    "description": "아무 글도 없는 카테고리는???"
   }
 ]
   

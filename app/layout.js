@@ -1,4 +1,5 @@
 // app/layout.js
+
 import fs from "fs";
 import path from "path";
 import "./globals.css";

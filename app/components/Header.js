@@ -1,4 +1,5 @@
 // app/components/Header.js
+
 "use client"; // 클라이언트 컴포넌트로 설정
 
 import Link from "next/link";
@@ -7,16 +8,38 @@ import "../globals.css";
 export default function Header({ categories }) {
     return (
         <header>
-            <h1
+            <div
                 style={{
-                    marginRight: "90%",
-                    color: "#fff",
-                    fontStyle: "italic",
-                    color: "#bbb",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "flex-start",
+                    marginLeft: "1%",
                 }}
             >
-                fromhelianthus
-            </h1>
+                <Link
+                    href="/"
+                    style={{
+                        fontSize: "20px",
+                        fontStyle: "italic",
+                        color: "#ddd",
+                        textDecoration: "none",
+                    }}
+                >
+                    fromhelianthus
+                </Link>
+                <Link
+                    href="/about"
+                    style={{
+                        fontSize: "16px",
+                        fontStyle: "italic",
+                        color: "#fff",
+                        textDecoration: "none",
+                        marginTop: "4px",
+                    }}
+                >
+                    About
+                </Link>
+            </div>
             <nav>
                 <ul
                     style={{
@@ -32,15 +55,7 @@ export default function Header({ categories }) {
                             href="/"
                             style={{ color: "#fff", textDecoration: "none" }}
                         >
-                            Home
-                        </Link>
-                    </li>
-                    <li>
-                        <Link
-                            href="/about"
-                            style={{ color: "#fff", textDecoration: "none" }}
-                        >
-                            About
+                            All
                         </Link>
                     </li>
                     {categories.map((category) => (

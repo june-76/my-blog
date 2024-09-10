@@ -41,7 +41,7 @@ const loadPostsByCategory = (categorySlug) => {
             return {
                 ...data,
                 slug: file.replace(/\.md$/, ""),
-                thumbnail, // 섬네일 추가
+                thumbnail,
             };
         })
         .filter((post) => post.category === categorySlug);
@@ -64,7 +64,7 @@ export default async function CategoryPage({ params }) {
             <section className="grid min-h-screen p-8 place-items-center">
                 <div className="container grid grid-cols-1 gap-8 my-auto lg:grid-cols-2">
                     {posts.length === 0 ? (
-                        <div>이 카테고리에 글이 없습니다.</div>
+                        <div>이 카테고리에는 아직 작성된 글이 없습니다.</div>
                     ) : (
                         posts.map((post) => (
                             <div

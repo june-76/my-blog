@@ -8,7 +8,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Root variables for theme management */
 :root {
     --foreground-rgb: 255, 255, 255;
     --background-start-rgb: 225, 225, 225;
@@ -16,21 +15,19 @@
 }
 
 @media (prefers-color-scheme: dark) {
-    :root {
+    /* :root {
         --foreground-rgb: 255, 255, 255;
         --background-start-rgb: 0, 0, 0;
         --background-end-rgb: 0, 0, 0;
-    }
+    } */
 }
 
-/* Utility classes */
 @layer utilities {
     .text-balance {
         text-wrap: balance;
     }
 }
 
-/* Shared header styles */
 header {
     background-color: #555555;
     color: #fff;

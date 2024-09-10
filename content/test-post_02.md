@@ -5,7 +5,7 @@ description: "사이드 프로젝트 만들자"
 category: "side_project"
 ---
 
-![섬네일 이미지](/thumbnail/blue.png)
+![섬네일 이미지](/thumbnail/wren-meinberg-AL2-t0GrSko-unsplash.jpg)
 
 # 소제목1
 

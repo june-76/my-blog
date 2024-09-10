@@ -65,14 +65,16 @@ export default async function HomePage() {
                                 <div className="relative bg-clip-border rounded-xl overflow-hidden bg-white text-gray-700 m-0 p-4">
                                     {" "}
                                     {/* 여기에 padding 추가 */}
-                                    <img
-                                        src={
-                                            post.thumbnail ||
-                                            "https://via.placeholder.com/400"
-                                        }
-                                        alt={`Thumbnail for ${post.title}`}
-                                        className="object-cover w-full h-full"
-                                    />
+                                    <a href={`/posts/${post.slug}`}>
+                                        <img
+                                            src={
+                                                post.thumbnail ||
+                                                "https://via.placeholder.com/400"
+                                            }
+                                            alt={`Thumbnail for ${post.title}`}
+                                            className="object-cover w-full h-full"
+                                        />
+                                    </a>
                                 </div>
                                 <div className="p-6 px-2 sm:pr-6 sm:pl-4">
                                     <p className="block antialiased font-sans text-sm font-light leading-normal text-inherit mb-4 !font-semibold">

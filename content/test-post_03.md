@@ -5,7 +5,7 @@ description: "너무 졸림"
 category: "cs"
 ---
 
-![섬네일 이미지](/thumbnail/purple.png)
+![섬네일 이미지](/thumbnail/paul-hanaoka-w2DsS-ZAP4U-unsplash.jpg)
 
 smile saver
 python, opencv, windows

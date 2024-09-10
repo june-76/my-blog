@@ -1,4 +1,5 @@
-// 기존 코드 유지
+// /app/posts/[slug]/page.js
+
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
@@ -39,7 +40,7 @@ export default async function PostPage({ params }) {
             <div className="container px-5 py-24 mx-auto">
                 <div className="flex flex-wrap -m-4">
                     <div className="p-4 md:w-2/3 mx-auto">
-                        <div className="h-full rounded-xl shadow-cla-blue bg-gradient-to-r from-indigo-50 to-blue-50 overflow-hidden">
+                        <div className="h-full rounded-xl bg-white overflow-hidden">
                             <div className="p-6">
                                 <h2 className="tracking-widest text-xs title-font font-medium text-gray-400 mb-1">
                                     {postCategory ? postCategory.name : "카테고리 없음"}

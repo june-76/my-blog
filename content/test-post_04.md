@@ -5,7 +5,7 @@ description: "사고나서 생각하자"
 category: "daily"
 ---
 
-![섬네일 이미지](/thumbnail/yellow.png)
+![섬네일 이미지](/thumbnail/yerlin-matu-GtwiBmtJvaU-unsplash.jpg)
 
 # 도메인 구입 전 통계를 확인해보자
 

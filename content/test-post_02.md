@@ -2,7 +2,7 @@
 title: "글이 적어도 두 개는 있어야지"
 date: "2024-08-18"
 description: "사이드 프로젝트 만들자"
-category: "side_project"
+category: "toy_proj"
 ---
 
 ![섬네일 이미지](/thumbnail/wren-meinberg-AL2-t0GrSko-unsplash.jpg)

@@ -66,3 +66,17 @@ nav a {
 
 nav a:hover {
 }
+
+/* 글 제목 스타일 */
+h3 {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-top: 0.2rem;
+    margin-bottom: 0.5rem;
+}
+
+/* 목록에 점이 표시되도록 설정 */
+ul {
+    list-style-type: disc;
+    margin-left: 1.5rem;
+}

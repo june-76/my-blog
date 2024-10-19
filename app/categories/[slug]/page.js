@@ -44,13 +44,15 @@ const loadPostsByCategory = (categorySlug) => {
                 thumbnail,
             };
         })
-        .filter((post) => post.category === categorySlug);
+        .filter((post) => post.category === categorySlug)
+        .sort((a, b) => new Date(b.date) - new Date(a.date)); // 날짜별로 정렬
 };
 
 export default async function CategoryPage({ params }) {
     const { slug } = params;
     const categories = loadCategories();
     const posts = loadPostsByCategory(slug);
+
     const currentCategory = categories.find(
         (category) => category.slug === slug
     );

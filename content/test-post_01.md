@@ -2,10 +2,10 @@
 title: "블로그를 만들어보자"
 date: "2024-08-16"
 description: "일기~"
-category: "daily"
+category: "Daily"
 ---
 
-![섬네일 이미지](/thumbnail/eric-han-WJ6fmN1D-h0-unsplash.jpg)
+![섬네일 이미지](/thumbnail/temp.png)
 
 # Welcome to my blog
 

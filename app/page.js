@@ -54,7 +54,7 @@ export default async function HomePage() {
     return (
         <>
             <section className="grid min-h-screen p-8 place-items-center">
-                <div className="container grid grid-cols-1 gap-8 my-auto lg:grid-cols-2">
+                <div className="container grid grid-cols-1 gap-8 my-auto sm:grid-cols-2 lg:grid-cols-2">
                     {validPosts.length === 0 ? (
                         <div>작성된 포스트가 없습니다.</div>
                     ) : (

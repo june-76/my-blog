@@ -5,7 +5,7 @@ description: ""
 category: "TIL"
 ---
 
-### 오늘의 책 읽기: 추천사 ~ 2장. 의미 있는 이름
+### 오늘의 책 읽기: 추천사 ~ 3장. 함수
 
 ![섬네일 이미지](/thumbnail/temp.png)
 

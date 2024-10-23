@@ -7,8 +7,6 @@ category: "TIL"
 
 ### 오늘의 책 읽기: 추천사 ~ 2장. 의미 있는 이름
 
-![섬네일 이미지](/thumbnail/temp.png)
-
 ### 기억에 남는, 기억하고 싶은 내용
 
 -   명확한 관례가 없다면 변수 moneyAmount는 money와 구분이 안 된다. customerInfo는 customer와, accountData는 account와, theMassage는 message와 구분이 안 된다.(p.27 line8)

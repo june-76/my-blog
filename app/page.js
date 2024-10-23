@@ -69,7 +69,7 @@ export default async function HomePage() {
                                         <img
                                             src={
                                                 post.thumbnail ||
-                                                "https://via.placeholder.com/400"
+                                                "https://placehold.co/600x400"
                                             }
                                             alt={`Thumbnail for ${post.title}`}
                                             className="object-cover w-full h-full"

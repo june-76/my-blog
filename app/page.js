@@ -44,16 +44,17 @@ export default async function HomePage() {
             post.title !== "Untitled" &&
             post.title.trim() !== "" &&
             post.date !== "No Date" &&
-            post.date.trim() !== "" &&
-            post.description !== "No Description" &&
-            post.description.trim() !== ""
+            post.date.trim() !== ""
         );
     });
+
+    // 날짜 기준으로 정렬 (최신 순)
+    validPosts.sort((a, b) => new Date(b.date) - new Date(a.date));
 
     return (
         <>
             <section className="grid min-h-screen p-8 place-items-center">
-                <div className="container grid grid-cols-1 gap-8 my-auto lg:grid-cols-2">
+                <div className="container grid grid-cols-1 gap-8 my-auto sm:grid-cols-2 lg:grid-cols-2">
                     {validPosts.length === 0 ? (
                         <div>작성된 포스트가 없습니다.</div>
                     ) : (
@@ -63,13 +64,12 @@ export default async function HomePage() {
                                 className="relative flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-none grid gap-2 item sm:grid-cols-2"
                             >
                                 <div className="relative bg-clip-border rounded-xl overflow-hidden bg-white text-gray-700 m-0 p-4">
-                                    {" "}
                                     {/* 여기에 padding 추가 */}
                                     <a href={`/posts/${post.slug}`}>
                                         <img
                                             src={
                                                 post.thumbnail ||
-                                                "https://via.placeholder.com/400"
+                                                "https://placehold.co/600x400"
                                             }
                                             alt={`Thumbnail for ${post.title}`}
                                             className="object-cover w-full h-full"
@@ -86,15 +86,7 @@ export default async function HomePage() {
                                     >
                                         {post.title}
                                     </a>
-                                    <p className="block antialiased font-sans text-base leading-relaxed text-inherit mb-8 font-normal !text-gray-500">
-                                        {post.description}
-                                    </p>
                                     <div className="flex items-center gap-4">
-                                        {/* <img
-                                            src="https://avatars.githubusercontent.com/u/165984445?v=4"
-                                            className="inline-block relative object-cover object-center !rounded-full w-12 h-12 rounded-lg"
-                                            alt="Author"
-                                        /> */}
                                         <div>
                                             <p className="block antialiased font-sans text-base font-light leading-relaxed text-blue-gray-900 mb-0.5 !font-semibold">
                                                 June

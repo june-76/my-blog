@@ -8,6 +8,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@import "prismjs/themes/prism.css";
+
 :root {
     --foreground-rgb: 255, 255, 255;
     --background-start-rgb: 225, 225, 225;
@@ -65,4 +67,16 @@ nav a {
 }
 
 nav a:hover {
+}
+
+h3 {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-top: 0.2rem;
+    margin-bottom: 0.5rem;
+}
+
+ul {
+    list-style-type: disc;
+    margin-left: 1.5rem;
 }

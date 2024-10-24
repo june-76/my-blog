@@ -1,22 +1,18 @@
 [
     {
         "name": "Daily",
-        "slug": "daily",
-        "description": "일상적인 이야기나 특정 기간 별 회고록"
+        "slug": "Daily"
     },
     {
-        "name": "Toy Proj",
-        "slug": "toy_proj",
-        "description": "토이 프로젝트나 사이드 프로젝트 개발기"
+        "name": "ToyProject",
+        "slug": "ToyProject"
     },
     {
         "name": "CS",
-        "slug": "cs",
-        "description": "컴퓨터공학 지식 및 알고리즘 풀이"
+        "slug": "CS"
     },
     {
-        "name": "Books",
-        "slug": "books",
-        "description": "아무 글도 없는 카테고리는???"
+        "name": "TIL",
+        "slug": "TIL"
     }
 ]

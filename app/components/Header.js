@@ -1,6 +1,6 @@
 // app/components/Header.js
 
-"use client"; // 클라이언트 컴포넌트로 설정
+"use client";
 
 import Link from "next/link";
 import "../globals.css";

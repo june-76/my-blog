@@ -45,7 +45,7 @@ const loadPostsByCategory = (categorySlug) => {
             };
         })
         .filter((post) => post.category === categorySlug)
-        .sort((a, b) => new Date(b.date) - new Date(a.date)); // 날짜별로 정렬
+        .sort((a, b) => new Date(b.date) - new Date(a.date));
 };
 
 export default async function CategoryPage({ params }) {

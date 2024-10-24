@@ -1,4 +1,4 @@
-"use client"; // 클라이언트 컴포넌트임을 명시
+"use client";
 
 import { useEffect } from "react";
 import Prism from "prismjs";

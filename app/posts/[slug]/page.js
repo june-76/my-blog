@@ -19,20 +19,17 @@ const loadCategories = () => {
 export default async function PostPage({ params }) {
     const { slug } = params;
 
-    // 포스트 파일 경로
     const filePath = path.join(process.cwd(), "content", `${slug}.md`);
 
-    // 포스트 파일이 존재하고 유효한지 확인
     if (!fs.existsSync(filePath)) {
-        return <h1>포스트를 찾을 수 없습니다.</h1>; // 포스트가 없을 경우 메시지
+        return <h1>포스트를 찾을 수 없습니다.</h1>;
     }
 
     const fileContent = fs.readFileSync(filePath, "utf-8");
     const { data: frontmatter, content } = matter(fileContent);
 
-    // 제목이나 날짜가 없는 경우 처리
     if (!frontmatter.title || !frontmatter.date) {
-        return <h1>유효하지 않은 포스트입니다.</h1>; // 제목이나 날짜가 없을 경우 메시지
+        return <h1>유효하지 않은 포스트입니다.</h1>;
     }
 
     // Markdown을 HTML로 변환

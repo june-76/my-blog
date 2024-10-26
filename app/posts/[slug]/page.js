@@ -43,24 +43,23 @@ export default async function PostPage({ params }) {
 
     return (
         <section className="text-gray-600 body-font">
-            <div className="container px-5 py-24 mx-auto">
+            <div className="container px-5 py-12 mx-auto max-w-lg sm:max-w-2xl">
                 <div className="flex flex-wrap -m-4">
-                    <div className="p-4 md:w-2/3 mx-auto">
-                        <div className="h-full rounded-xl bg-white overflow-hidden">
+                    <div className="w-full p-4 mx-auto">
+                        <div className="h-full rounded-xl bg-white overflow-hidden shadow-md">
                             <div className="p-6">
                                 <h2 className="tracking-widest text-xs title-font font-medium text-gray-400 mb-1">
                                     {postCategory
                                         ? postCategory.name
                                         : "카테고리 없음"}
                                 </h2>
-                                <h1 className="title-font text-2xl font-medium text-gray-600 mb-4">
+                                <h1 className="title-font text-xl sm:text-2xl font-medium text-gray-600 mb-4">
                                     {frontmatter.title}
                                 </h1>
-                                <p className="leading-relaxed text-gray-500 mb-4">
+                                <p className="leading-relaxed text-gray-500 mb-4 text-sm sm:text-base">
                                     {frontmatter.date}
                                 </p>
                                 <PostContent content={htmlContent} />{" "}
-                                {/* 클라이언트 컴포넌트로 전달 */}
                             </div>
                         </div>
                     </div>

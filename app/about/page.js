@@ -20,7 +20,10 @@ export default function AboutPage() {
                 <a href="#" className="text-blue-500 hover:text-blue-700 mx-3">
                     LinkedIn
                 </a>
-                <a href="#" className="text-blue-500 hover:text-blue-700 mx-3">
+                <a
+                    href="https://x.com/fromhelianthus"
+                    className="text-blue-500 hover:text-blue-700 mx-3"
+                >
                     Twitter
                 </a>
             </div>

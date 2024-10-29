@@ -33,7 +33,7 @@ export default async function HomePage() {
             title: frontmatter.title || "Untitled",
             category: frontmatter.category || "Uncategorized",
             date: frontmatter.date || "No Date",
-            description: frontmatter.description || "No Description",
+            // description: frontmatter.description || "No Description",
             thumbnail,
         };
     });
@@ -86,6 +86,9 @@ export default async function HomePage() {
                                     >
                                         {post.title}
                                     </a>
+                                    <p className="block antialiased font-sans text-base leading-relaxed text-inherit mb-8 font-normal !text-gray-500">
+                                        {post.description}
+                                    </p>
                                     <div className="flex items-center gap-4">
                                         <div>
                                             <p className="block antialiased font-sans text-base font-light leading-relaxed text-blue-gray-900 mb-0.5 !font-semibold">

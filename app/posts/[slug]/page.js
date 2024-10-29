@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 import { marked } from "marked";
+import Link from "next/link"; // Link 컴포넌트 추가
 import PostContent from "./PostContent"; // 클라이언트 컴포넌트 불러오기
 
 // 카테고리 데이터를 불러오는 함수
@@ -49,9 +50,16 @@ export default async function PostPage({ params }) {
                         <div className="h-full rounded-xl bg-white overflow-hidden shadow-md">
                             <div className="p-6">
                                 <h2 className="tracking-widest text-xs title-font font-medium text-gray-400 mb-1">
-                                    {postCategory
-                                        ? postCategory.name
-                                        : "카테고리 없음"}
+                                    {postCategory ? (
+                                        <Link
+                                            href={`/categories/${postCategory.slug}`}
+                                            className="hover:underline"
+                                        >
+                                            {postCategory.name}
+                                        </Link>
+                                    ) : (
+                                        "카테고리 없음"
+                                    )}
                                 </h2>
                                 <h1 className="title-font text-xl sm:text-2xl font-medium text-gray-600 mb-4">
                                     {frontmatter.title}

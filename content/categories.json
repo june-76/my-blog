@@ -4,15 +4,19 @@
         "slug": "Daily"
     },
     {
+        "name": "Travel",
+        "slug": "Travel"
+    },
+    {
         "name": "ToyProject",
         "slug": "ToyProject"
     },
     {
-        "name": "CS",
-        "slug": "CS"
-    },
-    {
         "name": "TIL",
         "slug": "TIL"
+    },
+    {
+        "name": "CS",
+        "slug": "CS"
     }
 ]

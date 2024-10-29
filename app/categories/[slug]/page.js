@@ -73,7 +73,7 @@ export default async function CategoryPage({ params }) {
                                 key={post.slug}
                                 className="relative flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-none grid gap-2 item sm:grid-cols-2"
                             >
-                                <div className="relative bg-clip-border rounded-xl overflow-hidden bg-white text-gray-700 shadow-lg m-0 p-4">
+                                <div className="relative bg-clip-border rounded-xl overflow-hidden bg-white text-gray-700 m-0 p-4">
                                     <img
                                         src={
                                             post.thumbnail ||

@@ -25,7 +25,7 @@ export default function Header({ categories }) {
                         textDecoration: "none",
                     }}
                 >
-                    fromhelianthus
+                    junefromjuly
                 </Link>
                 <Link
                     href="/about"
@@ -44,13 +44,16 @@ export default function Header({ categories }) {
                 <ul
                     style={{
                         listStyleType: "none",
-                        margin: "0",
+                        margin: "0 20px",
                         padding: "0",
                         display: "flex",
                         gap: "10px",
+                        overflowX: "auto", // 스크롤바가 필요할 때만 나타나도록 설정
+                        whiteSpace: "nowrap",
+                        scrollSnapType: "x mandatory",
                     }}
                 >
-                    <li>
+                    <li style={{ scrollSnapAlign: "start" }}>
                         <Link
                             href="/"
                             style={{ color: "#fff", textDecoration: "none" }}
@@ -59,7 +62,10 @@ export default function Header({ categories }) {
                         </Link>
                     </li>
                     {categories.map((category) => (
-                        <li key={category.slug}>
+                        <li
+                            key={category.slug}
+                            style={{ scrollSnapAlign: "start" }}
+                        >
                             <Link
                                 href={`/categories/${category.slug}`}
                                 style={{
@@ -73,6 +79,14 @@ export default function Header({ categories }) {
                     ))}
                 </ul>
             </nav>
+            <style jsx>{`
+                @media (min-width: 768px) {
+                    nav ul {
+                        overflow-x: visible; // PC 화면에서는 스크롤 제거
+                        justify-content: center; // 넓은 화면에서 가운데 정렬
+                    }
+                }
+            `}</style>
         </header>
     );
 }

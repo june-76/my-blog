@@ -1,5 +1,5 @@
 ---
-title: "TIL(Today I Learn) Day 9"
+title: "TIL(Today I Learn) Day 10"
 date: "2024-10-23"
 description: ""
 category: "TIL"

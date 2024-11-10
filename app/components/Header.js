@@ -8,53 +8,18 @@ import "../globals.css";
 export default function Header({ categories }) {
     return (
         <header>
-            <div
-                style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "flex-start",
-                    marginLeft: "1%",
-                }}
-            >
-                <Link
-                    href="/"
-                    style={{
-                        fontSize: "20px",
-                        fontStyle: "italic",
-                        color: "#ddd",
-                        textDecoration: "none",
-                    }}
-                >
-                    fromhelianthus
+            <div className="header-links">
+                <Link href="/" className="site-link">
+                    junefromjuly
                 </Link>
-                <Link
-                    href="/about"
-                    style={{
-                        fontSize: "16px",
-                        fontStyle: "italic",
-                        color: "#fff",
-                        textDecoration: "none",
-                        marginTop: "4px",
-                    }}
-                >
+                <Link href="/about" className="about-link">
                     About
                 </Link>
             </div>
             <nav>
-                <ul
-                    style={{
-                        listStyleType: "none",
-                        margin: "0",
-                        padding: "0",
-                        display: "flex",
-                        gap: "10px",
-                    }}
-                >
+                <ul className="category-list">
                     <li>
-                        <Link
-                            href="/"
-                            style={{ color: "#fff", textDecoration: "none" }}
-                        >
+                        <Link href="/" className="category-link">
                             All
                         </Link>
                     </li>
@@ -62,10 +27,7 @@ export default function Header({ categories }) {
                         <li key={category.slug}>
                             <Link
                                 href={`/categories/${category.slug}`}
-                                style={{
-                                    color: "#fff",
-                                    textDecoration: "none",
-                                }}
+                                className="category-link"
                             >
                                 {category.name}
                             </Link>

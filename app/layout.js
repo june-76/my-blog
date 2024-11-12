@@ -5,14 +5,17 @@ import path from "path";
 import "./globals.css";
 import Header from "./components/Header";
 
-// 카테고리 데이터를 로드하는 함수(서버 사이드)
 const loadCategories = () => {
+    // 루트 디렉토리 내에 있는 content 폴더 내의 categories.json 파일을 찾습니다.
     const categoriesFilePath = path.join(
         process.cwd(),
         "content",
         "categories.json"
     );
+
+    // 찾은 파일의 내용을 읽어옵니다.
     const categoriesData = fs.readFileSync(categoriesFilePath, "utf-8");
+
     return JSON.parse(categoriesData);
 };
 
@@ -21,8 +24,9 @@ export const metadata = {
     description: "june's blog",
 };
 
+// SSR Functional Component
+// childer: 부모 컴포넌트로부터 전달 받은 자식 요소
 export default function RootLayout({ children }) {
-    // 서버 사이드에서만 카테고리 데이터 로드
     const categories = loadCategories();
 
     return (
@@ -37,7 +41,7 @@ export default function RootLayout({ children }) {
                 >
                     <div className="items-centers grid grid-cols-1 justify-between gap-4 border-t border-gray-100 py-6 md:grid-cols-2">
                         <p className="text-sm/6 text-gray-600 max-md:text-center">
-                            여긴 뭘 적으면 좋을까
+                            © 2024 fromhelianthus. All rights reserved.
                         </p>
                         <div className="flex items-center justify-center space-x-4 text-sm/6 text-gray-500 md:justify-end">
                             <a href="#">Privacy policy</a>

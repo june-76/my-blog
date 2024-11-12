@@ -1,4 +1,4 @@
-// /app/page.js
+// app/page.js
 
 import fs from "fs";
 import path from "path";
@@ -7,8 +7,10 @@ import { remark } from "remark";
 import html from "remark-html";
 import { Analytics } from "@vercel/analytics/react";
 
+// SSR Functional Component
+// 사용자에게는 완성된 HTML이 전송됩니다.
 export default async function HomePage() {
-    // 데이터 패칭
+    // 루트 디렉토리 내에 있는 content라는 폴더를 찾고, 파일을 배열로 읽어옵니다.
     const files = fs.readdirSync(path.join(process.cwd(), "content"));
 
     const posts = files.map((filename) => {
@@ -19,15 +21,17 @@ export default async function HomePage() {
         );
         const { data: frontmatter } = matter(markdownWithMeta);
 
-        // 첫 번째 이미지 추출
+        // Markdown 콘텐츠를 HTML로 변환
         const processedContent = remark()
             .use(html)
             .processSync(markdownWithMeta);
         const contentHtml = processedContent.toString();
+
+        // 첫 번째 이미지를 섬네일 용도로 추출
         const firstImageMatch = contentHtml.match(/<img[^>]+src="([^">]+)"/);
         const thumbnail = firstImageMatch ? firstImageMatch[1] : null;
 
-        // 섬네일 추가
+        // 추출한 데이터를 객체로 반환
         return {
             slug,
             title: frontmatter.title || "Untitled",
@@ -64,7 +68,6 @@ export default async function HomePage() {
                                 className="relative flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-none grid gap-2 item sm:grid-cols-2"
                             >
                                 <div className="relative bg-clip-border rounded-xl overflow-hidden bg-white text-gray-700 m-0 p-4">
-                                    {/* 여기에 padding 추가 */}
                                     <a href={`/posts/${post.slug}`}>
                                         <img
                                             src={

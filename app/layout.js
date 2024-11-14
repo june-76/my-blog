@@ -4,6 +4,7 @@ import fs from "fs";
 import path from "path";
 import "./globals.css";
 import Header from "./components/Header";
+import { Analytics } from "@vercel/analytics/react";
 
 const loadCategories = () => {
     // 루트 디렉토리 내에 있는 content 폴더 내의 categories.json 파일을 찾습니다.
@@ -50,6 +51,8 @@ export default function RootLayout({ children }) {
                         </div>
                     </div>
                 </footer>
+                {/* 웹 사이트 전체에서 트래킹 데이터를 수집합니다. */}
+                <Analytics />
             </body>
         </html>
     );

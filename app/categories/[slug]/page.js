@@ -1,10 +1,14 @@
+// app/categories/[slug]/page.js
+
+// categories는 실제 파일 시스템상의 디렉토리 경로가 아닌, 동적 라우팅을 위한 폴더입니다.
+// [slug]는 동적 경로 파라미터로, URL 경로에서 동적으로 바뀌는 부분을 나타냅니다.
+
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 import Link from "next/link";
 import { remark } from "remark";
 import html from "remark-html";
-import { Analytics } from "@vercel/analytics/react";
 
 const loadCategories = () => {
     const categoriesFilePath = path.join(
@@ -13,6 +17,7 @@ const loadCategories = () => {
         "categories.json"
     );
     const categoriesData = fs.readFileSync(categoriesFilePath, "utf-8");
+
     return JSON.parse(categoriesData);
 };
 
@@ -28,7 +33,7 @@ const loadPostsByCategory = (categorySlug) => {
             const fileContents = fs.readFileSync(filePath, "utf-8");
             const { data } = matter(fileContents);
 
-            // 첫 번째 이미지 추출
+            // 섬네일 용도의 첫 번째 이미지 추출
             const processedContent = remark()
                 .use(html)
                 .processSync(fileContents);
@@ -48,6 +53,8 @@ const loadPostsByCategory = (categorySlug) => {
         .sort((a, b) => new Date(b.date) - new Date(a.date));
 };
 
+// 동적 라우팅을 사용하여 slug 값에 따라 카테고리별 포스트를 다르게 표시하는 동적 페이지입니다.
+// SSR 방식으로 동작합니다.
 export default async function CategoryPage({ params }) {
     const { slug } = params;
     const categories = loadCategories();
@@ -117,7 +124,6 @@ export default async function CategoryPage({ params }) {
                     )}
                 </div>
             </section>
-            <Analytics />
         </>
     );
 }

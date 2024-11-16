@@ -1,14 +1,13 @@
-// /app/page.js
-
+// app/page.js
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 import { remark } from "remark";
 import html from "remark-html";
-import { Analytics } from "@vercel/analytics/react";
 
-export default async function HomePage() {
-    // 데이터 패칭
+const POSTS_PER_PAGE = 10;
+
+async function fetchPosts(page) {
     const files = fs.readdirSync(path.join(process.cwd(), "content"));
 
     const posts = files.map((filename) => {
@@ -19,52 +18,62 @@ export default async function HomePage() {
         );
         const { data: frontmatter } = matter(markdownWithMeta);
 
-        // 첫 번째 이미지 추출
         const processedContent = remark()
             .use(html)
             .processSync(markdownWithMeta);
         const contentHtml = processedContent.toString();
+
         const firstImageMatch = contentHtml.match(/<img[^>]+src="([^">]+)"/);
         const thumbnail = firstImageMatch ? firstImageMatch[1] : null;
 
-        // 섬네일 추가
         return {
             slug,
             title: frontmatter.title || "Untitled",
             category: frontmatter.category || "Uncategorized",
             date: frontmatter.date || "No Date",
-            // description: frontmatter.description || "No Description",
             thumbnail,
         };
     });
 
-    // 유효한 포스트만 필터링
-    const validPosts = posts.filter((post) => {
-        return (
-            post.title !== "Untitled" &&
-            post.title.trim() !== "" &&
-            post.date !== "No Date" &&
-            post.date.trim() !== ""
-        );
-    });
+    const validPosts = posts.filter(
+        (post) => post.title !== "Untitled" && post.date !== "No Date"
+    );
 
-    // 날짜 기준으로 정렬 (최신 순)
     validPosts.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+    const startIndex = (page - 1) * POSTS_PER_PAGE;
+    const selectedPosts = validPosts.slice(
+        startIndex,
+        startIndex + POSTS_PER_PAGE
+    );
+
+    const totalPages = Math.ceil(validPosts.length / POSTS_PER_PAGE);
+
+    return {
+        posts: selectedPosts,
+        currentPage: page,
+        totalPages,
+    };
+}
+
+// Next.js 14의 새로운 방식: 페이지 데이터 가져오는 방식
+export default async function HomePage({ searchParams }) {
+    const page = parseInt(searchParams.page || "1", 10); // 페이지 번호 파라미터
+    const { posts, currentPage, totalPages } = await fetchPosts(page);
 
     return (
         <>
-            <section className="grid min-h-screen p-8 place-items-center">
+            <section className="grid p-8 place-items-center">
                 <div className="container grid grid-cols-1 gap-8 my-auto sm:grid-cols-2 lg:grid-cols-2">
-                    {validPosts.length === 0 ? (
+                    {posts.length === 0 ? (
                         <div>작성된 포스트가 없습니다.</div>
                     ) : (
-                        validPosts.map((post) => (
+                        posts.map((post) => (
                             <div
                                 key={post.slug}
                                 className="relative flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-none grid gap-2 item sm:grid-cols-2"
                             >
                                 <div className="relative bg-clip-border rounded-xl overflow-hidden bg-white text-gray-700 m-0 p-4">
-                                    {/* 여기에 padding 추가 */}
                                     <a href={`/posts/${post.slug}`}>
                                         <img
                                             src={
@@ -105,7 +114,36 @@ export default async function HomePage() {
                     )}
                 </div>
             </section>
-            <Analytics />
+
+            {/* 페이지 네비게이션 - 숫자 기반 */}
+            <div className="pagination">
+                {/* 이전 페이지 링크 */}
+                {currentPage > 1 && (
+                    <a href={`/?page=${currentPage - 1}`} className="prev-page">
+                        이전
+                    </a>
+                )}
+
+                {/* 페이지 번호 */}
+                {[...Array(totalPages)].map((_, index) => (
+                    <a
+                        key={index}
+                        href={`/?page=${index + 1}`}
+                        className={`page-button ${
+                            currentPage === index + 1 ? "active" : ""
+                        }`}
+                    >
+                        {index + 1}
+                    </a>
+                ))}
+
+                {/* 다음 페이지 링크 */}
+                {currentPage < totalPages && (
+                    <a href={`/?page=${currentPage + 1}`} className="next-page">
+                        다음
+                    </a>
+                )}
+            </div>
         </>
     );
 }

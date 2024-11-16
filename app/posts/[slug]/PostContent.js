@@ -1,3 +1,6 @@
+// app/posts/[slug]/PostContent.js
+
+// 해당 컴포넌트는 CSR임을 명시합니다.
 "use client";
 
 import { useEffect } from "react";
@@ -7,14 +10,16 @@ import "prismjs/components/prism-javascript";
 import "prismjs/components/prism-jsx";
 import "prismjs/components/prism-java";
 
+// 개별 포스트의 콘텐츠를 렌더링하는 클라이언트 컴포넌트입니다.
+// HTML 자체는 SSR되어 전달됩니다.
 export default function PostContent({ content }) {
-    // 클라이언트 측에서 Prism.js 하이라이팅을 적용
     useEffect(() => {
-        Prism.highlightAll(); // DOM이 준비된 후 하이라이팅 적용
+        Prism.highlightAll();
     }, [content]);
 
     return (
         <div className="leading-relaxed text-gray-700">
+            {/* 위험성이 있어 개선이 필요합니다. DOMPurify 사용은 검토중입니다. */}
             <div dangerouslySetInnerHTML={{ __html: content }} />
         </div>
     );

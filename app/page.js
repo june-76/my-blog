@@ -5,7 +5,7 @@ import matter from "gray-matter";
 import { remark } from "remark";
 import html from "remark-html";
 
-const POSTS_PER_PAGE = 6;
+const POSTS_PER_PAGE = 10;
 
 async function fetchPosts(page) {
     const files = fs.readdirSync(path.join(process.cwd(), "content"));

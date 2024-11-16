@@ -5,7 +5,7 @@ import Link from "next/link";
 import { remark } from "remark";
 import html from "remark-html";
 
-const POSTS_PER_PAGE = 6;
+const POSTS_PER_PAGE = 10;
 
 const loadCategories = () => {
     const categoriesFilePath = path.join(

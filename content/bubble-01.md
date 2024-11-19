@@ -2,7 +2,7 @@
 title: "버블 정렬(Bubble Sort)"
 date: "2023-05-28"
 description: ""
-category: "CS"
+category: "Algorithm"
 ---
 
 ### 첫 회사 면접에서의 기억

@@ -92,7 +92,7 @@ nav a:hover {
 /* Mobile view adjustments */
 @media (max-width: 767px) {
     nav ul {
-        padding-left: 10px;
+        padding-left: 100px;
     }
 }
 

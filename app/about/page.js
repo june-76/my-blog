@@ -1,12 +1,20 @@
 // app/about/page.js
 
+// Next.js의 파일 기반 라우팅 기능에 의해, about 폴더는 /about 경로를 생성합니다.
+// junefromjuly.blog/about 접근 시 about 폴더의 page.js 파일이 렌더링됩니다. (SSR)
+// 폴더 내의 page.js 파일은 해당 경로의 기본 페이지를 담당합니다. (라우트의 엔트리 포인트)
+
+import Image from "next/image";
+
 export default function AboutPage() {
     return (
         <div className="max-w-lg mx-auto my-10 bg-white rounded-lg shadow-md p-5">
-            <img
-                className="w-32 h-32 rounded-full mx-auto"
+            <Image
+                className="rounded-full mx-auto"
                 src="https://avatars.githubusercontent.com/u/165984445?v=4"
                 alt="Profile picture"
+                width={128}
+                height={128}
             />
             <h2 className="text-center text-2xl font-semibold mt-3">June</h2>
             <p className="text-center text-gray-600 mt-1">Software Engineer</p>

@@ -29,6 +29,7 @@ public class BubbleSortExample {
         int[] arr = {1, 6, 3, 9, 2};
 
         bubbleSort(arr);
+        printArray(arr);
     }
 
     public static void bubbleSort(int[] arr) {

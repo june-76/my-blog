@@ -20,7 +20,7 @@ export default function AboutPage() {
             <p className="text-center text-gray-600 mt-1">Software Engineer</p>
             <div className="flex justify-center mt-5">
                 <a
-                    href="https://github.com/fromhelianthus"
+                    href="https://github.com/june-76"
                     className="text-blue-500 hover:text-blue-700 mx-3"
                 >
                     GitHub

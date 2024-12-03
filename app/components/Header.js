@@ -7,15 +7,21 @@
 // 해당 컴포넌트는 CSR임을 명시합니다.
 "use client";
 
-// Link 컴포넌트는 클라이언트 측 라우팅을 처리합니다.
-// Link 컴포넌트를 사용하면 페이지 간 네비게이션이 CS에서 이루어집니다.
-// 때문에, 페이지를 새로고침하지 않아도 빠르고 부드럽게 이동할 수 있습니다.
+import { Suspense } from "react"; // Suspense import 추가
 import Link from "next/link";
 import { useSearchParams, usePathname } from "next/navigation"; // URL에서 searchParams를 가져오는 훅
 import "../globals.css";
 
 // categories props를 받습니다. (카테고리 정보를 담고 있는 배열)
 export default function Header({ categories = [] }) {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <HeaderContent categories={categories} />
+        </Suspense>
+    );
+}
+
+function HeaderContent({ categories }) {
     const searchParams = useSearchParams(); // 현재 검색 파라미터 가져오기
     const pathname = usePathname(); // 현재 경로 가져오기
 

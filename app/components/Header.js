@@ -63,7 +63,11 @@ function HeaderContent({ categories }) {
                         categories.map((category) => (
                             <li key={category.slug}>
                                 <Link
-                                    href={`/categories/${category.slug}`}
+                                    href={
+                                        language === "kr"
+                                            ? `/categories/${category.slug}` // 기본 언어일 때 쿼리 파라미터 생략
+                                            : `/categories/${category.slug}?lang=${language}` // 다른 언어일 때만 추가
+                                    }
                                     className="category-link"
                                 >
                                     {category.name}

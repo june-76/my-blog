@@ -1,3 +1,5 @@
+// app/categories/[slug]/page.js
+
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
@@ -5,20 +7,30 @@ import Link from "next/link";
 import { remark } from "remark";
 import html from "remark-html";
 
-const POSTS_PER_PAGE = 10;
+const POSTS_PER_PAGE = 5;
 
 const loadCategories = () => {
-    const categoriesFilePath = path.join(
-        process.cwd(),
-        "content",
-        "categories.json"
-    );
-    const categoriesData = fs.readFileSync(categoriesFilePath, "utf-8");
-    return JSON.parse(categoriesData);
+    try {
+        const categoriesFilePath = path.join(
+            process.cwd(),
+            "content",
+            "categories.json"
+        );
+
+        const categoriesData = fs.readFileSync(categoriesFilePath, "utf-8");
+
+        return JSON.parse(categoriesData);
+    } catch (error) {
+        console.error("Error loading categories:", error.message);
+
+        // 에러 발생 시 빈 배열 반환 (필요에 따라 다른 기본값 설정 가능)
+        return [];
+    }
 };
 
-const loadPostsByCategory = (categorySlug, page) => {
-    const postsDirectory = path.join(process.cwd(), "content");
+const loadPostsByCategory = (categorySlug, page, language) => {
+    const postsDirectory = path.join(process.cwd(), "content", language);
+
     const postFiles = fs
         .readdirSync(postsDirectory)
         .filter((file) => file.endsWith(".md"));
@@ -45,7 +57,9 @@ const loadPostsByCategory = (categorySlug, page) => {
                 thumbnail,
             };
         })
-        .filter((post) => post.category === categorySlug)
+        .filter(
+            (post) => post.category === categorySlug && post.lang === language // 언어 필터링 추가
+        )
         .sort((a, b) => new Date(b.date) - new Date(a.date));
 
     // 페이징 처리
@@ -64,8 +78,11 @@ const loadPostsByCategory = (categorySlug, page) => {
 export default async function CategoryPage({ params, searchParams }) {
     const { slug } = params;
     const categories = loadCategories();
-    const page = parseInt(searchParams.page || "1", 10); // 페이지 번호 파라미터
-    const { posts, totalPages } = loadPostsByCategory(slug, page);
+
+    const page = parseInt(searchParams.page || "1", 10); // 페이지 번호
+    const language = searchParams.lang || "kr"; // 언어 파라미터, 기본값 'kr'
+
+    const { posts, totalPages } = loadPostsByCategory(slug, page, language);
 
     const currentCategory = categories.find(
         (category) => category.slug === slug
@@ -129,21 +146,23 @@ export default async function CategoryPage({ params, searchParams }) {
 
             {/* 페이지 네비게이션 */}
             <div className="pagination">
-                {/* 이전 페이지 링크 */}
                 {page > 1 && (
                     <Link
-                        href={`/categories/${slug}?page=${page - 1}`}
+                        href={`/categories/${slug}?page=${
+                            page - 1
+                        }&lang=${language}`}
                         className="prev-page"
                     >
                         이전
                     </Link>
                 )}
 
-                {/* 페이지 번호 */}
                 {[...Array(totalPages)].map((_, index) => (
                     <Link
                         key={index}
-                        href={`/categories/${slug}?page=${index + 1}`}
+                        href={`/categories/${slug}?page=${
+                            index + 1
+                        }&lang=${language}`}
                         className={`page-button ${
                             page === index + 1 ? "active" : ""
                         }`}
@@ -152,10 +171,11 @@ export default async function CategoryPage({ params, searchParams }) {
                     </Link>
                 ))}
 
-                {/* 다음 페이지 링크 */}
                 {page < totalPages && (
                     <Link
-                        href={`/categories/${slug}?page=${page + 1}`}
+                        href={`/categories/${slug}?page=${
+                            page + 1
+                        }&lang=${language}`}
                         className="next-page"
                     >
                         다음

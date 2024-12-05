@@ -57,9 +57,11 @@ const loadPostsByCategory = (categorySlug, page, language) => {
                 thumbnail,
             };
         })
-        .filter(
-            (post) => post.category === categorySlug && post.lang === language // 언어 필터링 추가
-        )
+        .filter((post) => {
+            // 언어 파라미터가 없을 경우 kr로 기본값 설정
+            const postLang = post.lang || "kr";
+            return post.category === categorySlug && postLang === language;
+        })
         .sort((a, b) => new Date(b.date) - new Date(a.date));
 
     // 페이징 처리

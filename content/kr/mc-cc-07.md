@@ -1,8 +1,8 @@
 ---
-title: "TIL(Today I Learn) Day 6"
+title: "TIL(Today I Learn) Day 7"
 date: "2024-10-19"
 description: ""
-category: "TIL"
+category: "learning-notes"
 ---
 
 ### 오늘의 책 읽기: 추천사 ~ 5장. 형식 맞추기

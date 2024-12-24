@@ -1,8 +1,8 @@
 ---
-title: "TIL(Today I Learn) Day 1"
+title: "TIL(Today I Learn) Day 2"
 date: "2024-10-12"
 description: ""
-category: "TIL"
+category: "learning-notes"
 ---
 
 ### 오늘의 책 읽기: 추천사 ~ 1장. 깨끗한 코드
@@ -24,5 +24,9 @@ category: "TIL"
 
 -   killer app
 -   leblanc’s Law
+
+
+
+
 
 #노개북 #노마드코더 #개발자북클럽

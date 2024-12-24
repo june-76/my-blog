@@ -7,7 +7,7 @@ import Link from "next/link";
 import { remark } from "remark";
 import html from "remark-html";
 
-const POSTS_PER_PAGE = 5;
+const POSTS_PER_PAGE = 8;
 
 const loadCategories = () => {
     try {

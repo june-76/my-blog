@@ -25,11 +25,11 @@ export default function AboutPage() {
                 >
                     GitHub
                 </a>
-                <a href="#" className="text-blue-500 hover:text-blue-700 mx-3">
+                <a href="" className="text-blue-500 hover:text-blue-700 mx-3">
                     LinkedIn
                 </a>
                 <a
-                    href="https://x.com/fromhelianthus"
+                    href="https://x.com/junefromjuly"
                     className="text-blue-500 hover:text-blue-700 mx-3"
                 >
                     Twitter

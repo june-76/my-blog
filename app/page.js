@@ -5,8 +5,9 @@ import path from "path";
 import matter from "gray-matter";
 import { remark } from "remark";
 import html from "remark-html";
+import remarkBreaks from "remark-breaks";
 
-const POSTS_PER_PAGE = 5;
+const POSTS_PER_PAGE = 8;
 
 async function fetchPosts(page, language = "kr") {
     // language 값이 숫자로 전달되지 않도록 문자열로 처리
@@ -36,6 +37,7 @@ async function fetchPosts(page, language = "kr") {
         const { data: frontmatter } = matter(markdownWithMeta);
 
         const processedContent = remark()
+            .use(remarkBreaks)
             .use(html)
             .processSync(markdownWithMeta);
         const contentHtml = processedContent.toString();
@@ -77,7 +79,7 @@ async function fetchPosts(page, language = "kr") {
 export default async function HomePage({ searchParams }) {
     const page = parseInt(searchParams.page || "1", 10); // 페이지 번호 파라미터
 
-    // 언어 파라미터를 searchParams에서 가져오거나 기본값으로 "kr" 설정
+    // 언어 파라��터를 searchParams에서 가져오거나 기본값으로 "kr" 설정
     const language = searchParams.lang || "kr";
 
     const { posts, currentPage, totalPages } = await fetchPosts(page, language);

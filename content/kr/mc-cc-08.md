@@ -2,7 +2,7 @@
 title: "TIL(Today I Learn) Day 7"
 date: "2024-10-20"
 description: ""
-category: "TIL"
+category: "learning-notes"
 ---
 
 ### 오늘의 책 읽기: 추천사 ~ 6장. 객체와 자료구조

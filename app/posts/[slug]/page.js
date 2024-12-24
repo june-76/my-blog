@@ -5,6 +5,7 @@ import path from "path";
 import matter from "gray-matter";
 import { marked } from "marked";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 // HTML로 변환된 콘텐츠를 표시하기 위한 클라이언트 컴포넌트를 불러옵니다.
 import PostContent from "./PostContent";
 
@@ -19,19 +20,27 @@ const loadCategories = () => {
 };
 
 // 페이지 렌더링을 담당하는 SSR 함수형 컴포넌트입니다.
-export default async function PostPage({ params }) {
-    const { slug } = params;
+export default async function PostPage({ params, searchParams }) {
+    const { slug } = params; // URL에서 동적 경로 슬러그를 가져옵니다.
+    const lang = searchParams.lang || "kr"; // 쿼리 파라미터에서 언어를 가져옵니다.
 
-    const filePath = path.join(process.cwd(), "content", `${slug}.md`);
+    // URL 경로에서 % 문자 처리
+    const decodedSlug = decodeURIComponent(slug);
+
+    const filePath = path.join(
+        process.cwd(),
+        "content",
+        lang,
+        `${decodedSlug}.md` // 선택된 언어에 맞춰 파일 경로 설정
+    );
 
     if (!fs.existsSync(filePath)) {
-        return <h1>포스트를 찾을 수 없습니다.</h1>;
+        return notFound(); // 포스트가 존재하지 않으면 'notFound' 페이지를 반환합니다.
     }
 
     const fileContent = fs.readFileSync(filePath, "utf-8");
     const { data: frontmatter, content } = matter(fileContent);
 
-    // 제목이나 날짜가 없는 경우 유효하지 않은 포스트로 간주
     if (!frontmatter.title || !frontmatter.date) {
         return <h1>유효하지 않은 포스트입니다.</h1>;
     }

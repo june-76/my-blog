@@ -1,24 +1,43 @@
 // app/page.js
+
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 import { remark } from "remark";
 import html from "remark-html";
+import remarkBreaks from "remark-breaks";
 
-const POSTS_PER_PAGE = 10;
+const POSTS_PER_PAGE = 8;
 
-async function fetchPosts(page) {
-    const files = fs.readdirSync(path.join(process.cwd(), "content"));
+async function fetchPosts(page, language = "kr") {
+    // language 값이 숫자로 전달되지 않도록 문자열로 처리
+    if (typeof language !== "string") {
+        language = "kr"; // 기본값 "kr"로 설정
+    }
+
+    // 해당 언어 폴더 경로 설정
+    const folderPath = path.join(process.cwd(), "content", language);
+
+    // 경로 로그 추가
+    console.log(`Looking for posts in: ${folderPath}`);
+
+    // 해당 언어 폴더가 없으면 빈 배열 반환
+    if (!fs.existsSync(folderPath)) {
+        return { posts: [], currentPage: page, totalPages: 0 };
+    }
+
+    const files = fs.readdirSync(folderPath);
 
     const posts = files.map((filename) => {
         const slug = filename.replace(".md", "");
         const markdownWithMeta = fs.readFileSync(
-            path.join("content", filename),
+            path.join(folderPath, filename),
             "utf-8"
         );
         const { data: frontmatter } = matter(markdownWithMeta);
 
         const processedContent = remark()
+            .use(remarkBreaks)
             .use(html)
             .processSync(markdownWithMeta);
         const contentHtml = processedContent.toString();
@@ -59,7 +78,11 @@ async function fetchPosts(page) {
 // Next.js 14의 새로운 방식: 페이지 데이터 가져오는 방식
 export default async function HomePage({ searchParams }) {
     const page = parseInt(searchParams.page || "1", 10); // 페이지 번호 파라미터
-    const { posts, currentPage, totalPages } = await fetchPosts(page);
+
+    // 언어 파라��터를 searchParams에서 가져오거나 기본값으로 "kr" 설정
+    const language = searchParams.lang || "kr";
+
+    const { posts, currentPage, totalPages } = await fetchPosts(page, language);
 
     return (
         <>
@@ -115,20 +138,26 @@ export default async function HomePage({ searchParams }) {
                 </div>
             </section>
 
-            {/* 페이지 네비게이션 - 숫자 기반 */}
             <div className="pagination">
-                {/* 이전 페이지 링크 */}
+                {/* 이전 페이지 */}
                 {currentPage > 1 && (
-                    <a href={`/?page=${currentPage - 1}`} className="prev-page">
+                    <a
+                        href={`/?${
+                            language === "kr" ? "" : `lang=${language}&`
+                        }page=${currentPage - 1}`}
+                        className="prev-page"
+                    >
                         이전
                     </a>
                 )}
 
-                {/* 페이지 번호 */}
+                {/* 페이지 위치 지정 */}
                 {[...Array(totalPages)].map((_, index) => (
                     <a
                         key={index}
-                        href={`/?page=${index + 1}`}
+                        href={`/?${
+                            language === "kr" ? "" : `lang=${language}&`
+                        }page=${index + 1}`}
                         className={`page-button ${
                             currentPage === index + 1 ? "active" : ""
                         }`}
@@ -137,9 +166,14 @@ export default async function HomePage({ searchParams }) {
                     </a>
                 ))}
 
-                {/* 다음 페이지 링크 */}
+                {/* 다음 페이지 */}
                 {currentPage < totalPages && (
-                    <a href={`/?page=${currentPage + 1}`} className="next-page">
+                    <a
+                        href={`/?${
+                            language === "kr" ? "" : `lang=${language}&`
+                        }page=${currentPage + 1}`}
+                        className="next-page"
+                    >
                         다음
                     </a>
                 )}

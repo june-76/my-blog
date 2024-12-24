@@ -61,6 +61,34 @@ header .about-link {
     margin-top: 4px;
 }
 
+header .language-toggle {
+    position: absolute; /* absolute로 위치 고정 */
+    top: 10px; /* 상단에 위치 */
+    right: 10px; /* 우측에 위치 */
+    display: flex;
+    align-items: center;
+    /* z-index: 10; 다른 요소들 위에 위치하도록 설정 */
+}
+
+header .language-toggle-button {
+    padding: 8px 15px;
+    font-size: 16px;
+    font-weight: bold;
+    background-color: #6d6a6a;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+header .language-toggle-button.active {
+    color: #f0f0f0;
+}
+
+header .language-text {
+    text-transform: uppercase;
+    font-size: 14px;
+}
+
 /* Navigation styles */
 nav ul {
     display: flex;
@@ -92,7 +120,7 @@ nav a:hover {
 /* Mobile view adjustments */
 @media (max-width: 767px) {
     nav ul {
-        padding-left: 10px;
+        padding-left: 100px;
     }
 }
 

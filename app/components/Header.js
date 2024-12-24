@@ -7,14 +7,35 @@
 // 해당 컴포넌트는 CSR임을 명시합니다.
 "use client";
 
-// Link 컴포넌트는 클라이언트 측 라우팅을 처리합니다.
-// Link 컴포넌트를 사용하면 페이지 간 네비게이션이 CS에서 이루어집니다.
-// 때문에, 페이지를 새로고침하지 않아도 빠르고 부드럽게 이동할 수 있습니다.
+import { Suspense } from "react"; // Suspense import 추가
 import Link from "next/link";
+import { useSearchParams, usePathname } from "next/navigation"; // URL에서 searchParams를 가져오는 훅
 import "../globals.css";
 
 // categories props를 받습니다. (카테고리 정보를 담고 있는 배열)
 export default function Header({ categories = [] }) {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <HeaderContent categories={categories} />
+        </Suspense>
+    );
+}
+
+function HeaderContent({ categories }) {
+    const searchParams = useSearchParams(); // 현재 검색 파라미터 가져오기
+    const pathname = usePathname(); // 현재 경로 가져오기
+
+    const language = searchParams.get("lang") || "kr"; // lang 파라미터가 없으면 기본 'kr'
+
+    // 언어 토글 함수: 현재 언어가 'kr'이면 'jp'로, 'jp'이면 'kr'로 변경
+    const toggleLanguage = () => {
+        const newLang = language === "kr" ? "jp" : "kr";
+        const newUrl = newLang === "kr" ? pathname : `${pathname}?lang=jp`;
+
+        // URL을 변경하고 페이지 이동
+        window.location.href = newUrl; // URL을 직접 설정하여 페이지 이동
+    };
+
     return (
         <header>
             <div className="header-links">
@@ -42,7 +63,11 @@ export default function Header({ categories = [] }) {
                         categories.map((category) => (
                             <li key={category.slug}>
                                 <Link
-                                    href={`/categories/${category.slug}`}
+                                    href={
+                                        language === "kr"
+                                            ? `/categories/${category.slug}` // 기본 언어일 때 쿼리 파라미터 생략
+                                            : `/categories/${category.slug}?lang=${language}` // 다른 언어일 때만 추가
+                                    }
                                     className="category-link"
                                 >
                                     {category.name}
@@ -52,6 +77,21 @@ export default function Header({ categories = [] }) {
                     )}
                 </ul>
             </nav>
+
+            {/* 언어 토글 버튼 추가 */}
+            <div className="language-toggle" onClick={toggleLanguage}>
+                <button
+                    className={`language-toggle-button ${
+                        language === "jp" ? "active" : ""
+                    }`}
+                >
+                    {language === "kr" ? (
+                        <span className="language-text">JP</span>
+                    ) : (
+                        <span className="language-text">KR</span>
+                    )}
+                </button>
+            </div>
         </header>
     );
 }

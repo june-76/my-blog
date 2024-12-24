@@ -1,8 +1,8 @@
 ---
-title: "TIL(Today I Learn) Day 2"
+title: "TIL(Today I Learn) Day 3"
 date: "2024-10-13"
 description: ""
-category: "TIL"
+category: "learning-notes"
 ---
 
 ### 오늘의 책 읽기: 추천사 ~ 2장. 의미 있는 이름

@@ -42,7 +42,7 @@ export default function RootLayout({ children }) {
                 >
                     <div className="items-centers grid grid-cols-1 justify-between gap-4 border-t border-gray-100 py-6 md:grid-cols-2">
                         <p className="text-sm/6 text-gray-600 max-md:text-center">
-                            © 2024 fromhelianthus. All rights reserved.
+                            © 2024 June. All rights reserved.
                         </p>
                         <div className="flex items-center justify-center space-x-4 text-sm/6 text-gray-500 md:justify-end">
                             <a href="/">Privacy policy</a>

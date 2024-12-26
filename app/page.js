@@ -98,14 +98,19 @@ export default async function HomePage({ searchParams }) {
                             >
                                 <div className="relative bg-clip-border rounded-xl overflow-hidden bg-white text-gray-700 m-0 p-4">
                                     <a href={`/posts/${post.slug}`}>
-                                        <img
-                                            src={
-                                                post.thumbnail ||
-                                                "https://placehold.co/600x400"
-                                            }
-                                            alt={`Thumbnail for ${post.title}`}
-                                            className="object-cover w-full h-full"
-                                        />
+                                        <div
+                                            className="relative w-full"
+                                            style={{ aspectRatio: "4/3" }}
+                                        >
+                                            <img
+                                                src={
+                                                    post.thumbnail ||
+                                                    "https://placehold.co/600x400"
+                                                }
+                                                alt={`Thumbnail for ${post.title}`}
+                                                className="absolute inset-0 w-full h-full object-cover"
+                                            />
+                                        </div>
                                     </a>
                                 </div>
                                 <div className="p-6 px-2 sm:pr-6 sm:pl-4">

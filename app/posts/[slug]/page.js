@@ -9,6 +9,7 @@ import { notFound } from "next/navigation";
 // HTML로 변환된 콘텐츠를 표시하기 위한 클라이언트 컴포넌트를 불러옵니다.
 import PostContent from "./PostContent";
 
+// 카테고리 데이터 로드
 const loadCategories = () => {
     const categoriesFilePath = path.join(
         process.cwd(),
@@ -19,6 +20,12 @@ const loadCategories = () => {
     return JSON.parse(categoriesData);
 };
 
+// 일본어 포스트 여부 확인
+const checkJpPost = (slug) => {
+    const jpFilePath = path.join(process.cwd(), "content", "jp", `${slug}:`);
+    return fs.existsSync(jpFilePath);
+};
+
 // 페이지 렌더링을 담당하는 SSR 함수형 컴포넌트입니다.
 export default async function PostPage({ params, searchParams }) {
     const { slug } = params; // URL에서 동적 경로 슬러그를 가져옵니다.
@@ -26,6 +33,29 @@ export default async function PostPage({ params, searchParams }) {
 
     // URL 경로에서 % 문자 처리
     const decodedSlug = decodeURIComponent(slug);
+
+    const hasJpPost = checkJpPost(decodedSlug);
+
+    // 일본어 포스트가 없는데 lang=jp로 접근한 경우 원래 포스트로 리다이렉트
+    if (lang === "jp" && !hasJpPost) {
+        return (
+            <section className="text-gray-600 body-font">
+                <div className="container px-5 py-12 mx-auto max-w-lg sm:max-w-2xl">
+                    <div className="translation-not-found">
+                        <h1 className="text-2xl mb-4">申し訳ありません</h1>
+                        <p className="mb-2">
+                            この記事はまだ日本語に翻訳されていません。
+                        </p>
+                        <p className="mb-8">韓国語版にリダイレクトします...</p>
+                        <meta
+                            httpEquiv="refresh"
+                            content={`3;url=/posts/${decodedSlug}`}
+                        />
+                    </div>
+                </div>
+            </section>
+        );
+    }
 
     const filePath = path.join(
         process.cwd(),

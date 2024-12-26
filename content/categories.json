@@ -1,22 +1,18 @@
 [
     {
-        "name": "Daily",
-        "slug": "Daily"
+        "name": "Personal",
+        "slug": "personal"
     },
     {
-        "name": "ToyProject",
-        "slug": "ToyProject"
+        "name": "Learning Notes",
+        "slug": "learning-notes"
     },
     {
-        "name": "TIL",
-        "slug": "TIL"
+        "name": "Project Log",
+        "slug": "project-log"
     },
     {
-        "name": "Algorithm",
-        "slug": "Algorithm"
-    },
-    {
-        "name": "CS",
-        "slug": "CS"
+        "name": "CS / Algorithm",
+        "slug": "cs-algorithm"
     }
 ]

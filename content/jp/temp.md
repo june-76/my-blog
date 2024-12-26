@@ -7,10 +7,4 @@ category: "Daily"
 
 ### 仮のタイトル
 
-![blue](/thumbnail/blue.png)<br/>
-
-![purple](/thumbnail/purple.png)<br/>
-
-![yellow](/thumbnail/yellow.png)<br/>
-
 仮の内容

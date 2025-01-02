@@ -24,8 +24,16 @@ export default function Header({ categories = [] }) {
 function HeaderContent({ categories }) {
     const searchParams = useSearchParams(); // 현재 검색 파라미터 가져오기
     const pathname = usePathname(); // 현재 경로 가져오기
+    const language = searchParams.get("lang") || "kr";
 
-    const language = searchParams.get("lang") || "kr"; // lang 파라미터가 없으면 기본 'kr'
+    // 현재 활성화된 카테고리 확인 함수
+    const isActiveCategory = (categorySlug) => {
+        if (categorySlug === "home") {
+            // 홈페이지인 경우 ('/' 경로)
+            return pathname === "/";
+        }
+        return pathname.includes(`/categories/${categorySlug}`);
+    };
 
     // 언어 토글 함수: 현재 언어가 'kr'이면 'jp'로, 'jp'이면 'kr'로 변경
     const toggleLanguage = () => {
@@ -49,7 +57,12 @@ function HeaderContent({ categories }) {
             <nav>
                 <ul className="category-list">
                     <li>
-                        <Link href="/" className="category-link">
+                        <Link
+                            href="/"
+                            className={`category-link ${
+                                isActiveCategory("home") ? "active" : ""
+                            }`}
+                        >
                             Home
                         </Link>
                     </li>
@@ -65,10 +78,14 @@ function HeaderContent({ categories }) {
                                 <Link
                                     href={
                                         language === "kr"
-                                            ? `/categories/${category.slug}` // 기본 언어일 때 쿼리 파라미터 생략
-                                            : `/categories/${category.slug}?lang=${language}` // 다른 언어일 때만 추가
+                                            ? `/categories/${category.slug}`
+                                            : `/categories/${category.slug}?lang=${language}`
                                     }
-                                    className="category-link"
+                                    className={`category-link ${
+                                        isActiveCategory(category.slug)
+                                            ? "active"
+                                            : ""
+                                    }`}
                                 >
                                     {category.name}
                                 </Link>
@@ -78,18 +95,31 @@ function HeaderContent({ categories }) {
                 </ul>
             </nav>
 
-            {/* 언어 토글 버튼 추가 */}
-            <div className="language-toggle" onClick={toggleLanguage}>
+            <div className="language-toggle-container">
                 <button
-                    className={`language-toggle-button ${
-                        language === "jp" ? "active" : ""
-                    }`}
+                    className="language-switch-button"
+                    onClick={toggleLanguage}
+                    aria-label="Toggle Language"
                 >
-                    {language === "kr" ? (
-                        <span className="language-text">JP</span>
-                    ) : (
-                        <span className="language-text">KR</span>
-                    )}
+                    <span
+                        className={`switch-option kr ${
+                            language === "kr" ? "active" : ""
+                        }`}
+                    >
+                        KR
+                    </span>
+                    <span
+                        className={`switch-option jp ${
+                            language === "jp" ? "active" : ""
+                        }`}
+                    >
+                        JP
+                    </span>
+                    <span
+                        className={`switch-slider ${
+                            language === "jp" ? "jp-active" : ""
+                        }`}
+                    ></span>
                 </button>
             </div>
         </header>

@@ -18,11 +18,6 @@
 
 /* Dark mode settings */
 @media (prefers-color-scheme: dark) {
-    :root {
-        --foreground-rgb: 255, 255, 255;
-        --background-start-rgb: 0, 0, 0;
-        --background-end-rgb: 0, 0, 0;
-    }
 }
 
 /* Body background color */
@@ -36,13 +31,14 @@ header {
     color: #fff;
     padding: 10px 0;
     text-align: center;
+    position: relative;
 }
 
 header .header-links {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    margin-left: 1%;
+    margin-left: 12px;
     margin-bottom: 30px;
 }
 
@@ -62,20 +58,20 @@ header .about-link {
 }
 
 header .language-toggle {
-    position: absolute; /* absolute로 위치 고정 */
-    top: 10px; /* 상단에 위치 */
-    right: 10px; /* 우측에 위치 */
+    position: absolute;
+    top: 10px;
+    right: 12px;
     display: flex;
     align-items: center;
     /* z-index: 10; 다른 요소들 위에 위치하도록 설정 */
 }
 
 header .language-toggle-button {
-    padding: 8px 15px;
+    padding: 6px 16px;
     font-size: 16px;
     font-weight: bold;
     background-color: #6d6a6a;
-    border-radius: 25px;
+    border-radius: 20px;
     cursor: pointer;
     transition: background-color 0.3s ease, color 0.3s ease;
 }
@@ -115,6 +111,16 @@ nav a {
 
 nav a:hover {
     text-decoration: underline; /* Hover effect */
+}
+
+.category-link {
+    /* 기존 스타일 유지 */
+    color: inherit;
+    text-decoration: none;
+}
+
+.category-link.active {
+    color: #fade27;
 }
 
 /* Mobile view adjustments */
@@ -172,4 +178,50 @@ ul {
     border-radius: 4px;
     background-color: #5e5e5e;
     color: white;
+}
+
+/* 언어 토글 스위치 스타일 */
+.language-toggle-container {
+    position: absolute;
+    top: 16px;
+    right: 12px;
+}
+
+.language-switch-button {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: #c0c0c0;
+    border-radius: 18px;
+    padding: 4px;
+    cursor: pointer;
+    width: 68px;
+    height: 32px;
+}
+
+.switch-option {
+    z-index: 1;
+    flex: 1;
+    text-align: center;
+    color: #5e5e5e;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.switch-option.active {
+    color: #5e5e5e;
+}
+
+.switch-slider {
+    position: absolute;
+    left: 4px;
+    width: 32px;
+    height: 24px;
+    background-color: #fade27;
+    border-radius: 18px;
+    transition: transform 0.3s ease;
+}
+
+.switch-slider.jp-active {
+    transform: translateX(28px);
 }

@@ -7,7 +7,7 @@ category: "learning-notes"
 
 ### 오늘의 책 읽기: 추천사 ~ 9장. 단위 테스트
 
-2024.10.25. Fri.
+![](/images/GZnIkgKacAAt67Q.jpg)
 
 ### 기억에 남는, 기억하고 싶은 내용
 

@@ -45,6 +45,11 @@ export default async function PostPage({ params, searchParams }) {
         return <h1>유효하지 않은 포스트입니다.</h1>;
     }
 
+    // 마크다운 설정 변경
+    marked.setOptions({
+        breaks: true, // 마크다운의 줄바꿈을 <br>로 변환
+    });
+
     // 마크다운 콘텐츠를 HTML 문자열로 변환
     const htmlContent = marked(content);
 

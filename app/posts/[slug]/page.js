@@ -26,10 +26,55 @@ const checkJpPost = (slug) => {
     return fs.existsSync(jpFilePath);
 };
 
+// 모든 포스트 목록 로드 (작성 시간 포함)
+const loadPosts = (lang) => {
+    const postsDirectory = path.join(process.cwd(), "content", lang);
+    const filenames = fs.readdirSync(postsDirectory);
+    return filenames.map((filename) => {
+        const filePath = path.join(postsDirectory, filename);
+        const fileContent = fs.readFileSync(filePath, "utf-8");
+        const { data: frontmatter } = matter(fileContent);
+        return {
+            slug: filename.replace(/\.md$/, ""),
+            date: new Date(frontmatter.date),
+            title: frontmatter.title, // title 추가
+        };
+    });
+};
+
+// 특정 카테고리에 해당하는 포스트 목록 로드 (작성 시간 포함)
+const loadPostsByCategory = (lang, categorySlug) => {
+    const postsDirectory = path.join(process.cwd(), "content", lang);
+    const filenames = fs.readdirSync(postsDirectory);
+    return filenames
+        .map((filename) => {
+            const filePath = path.join(postsDirectory, filename);
+            const fileContent = fs.readFileSync(filePath, "utf-8");
+            const { data: frontmatter } = matter(fileContent);
+            return {
+                slug: filename.replace(/\.md$/, ""),
+                date: new Date(frontmatter.date),
+                category: frontmatter.category,
+                title: frontmatter.title, // title 추가
+            };
+        })
+        .filter((post) => post.category === categorySlug);
+};
+
+// 이전 글과 다음 글 찾기 (작성 시간 기준 정렬)
+const getAdjacentPosts = (posts, currentSlug) => {
+    posts.sort((a, b) => a.date - b.date);
+    const index = posts.findIndex((post) => post.slug === currentSlug);
+    const prevPost = index > 0 ? posts[index - 1] : null;
+    const nextPost = index < posts.length - 1 ? posts[index + 1] : null;
+    return { prevPost, nextPost };
+};
+
 // 페이지 렌더링을 담당하는 SSR 함수형 컴포넌트입니다.
 export default async function PostPage({ params, searchParams }) {
     const { slug } = params; // URL에서 동적 경로 슬러그를 가져옵니다.
     const lang = searchParams.lang || "kr"; // 쿼리 파라미터에서 언어를 가져옵니다.
+    const category = searchParams.category || null; // 쿼리 파라미터에서 카테고리를 가져옵니다.
 
     // URL 경로에서 % 문자 처리
     const decodedSlug = decodeURIComponent(slug);
@@ -75,6 +120,11 @@ export default async function PostPage({ params, searchParams }) {
         return <h1>유효하지 않은 포스트입니다.</h1>;
     }
 
+    // 마크다운 설정 변경
+    marked.setOptions({
+        breaks: true, // 마크다운의 줄바꿈을 <br>로 변환
+    });
+
     // 마크다운 콘텐츠를 HTML 문자열로 변환
     const htmlContent = marked(content);
 
@@ -85,6 +135,11 @@ export default async function PostPage({ params, searchParams }) {
     const postCategory = categories.find(
         (category) => category.slug === frontmatter.category
     );
+
+    const posts = category
+        ? loadPostsByCategory(lang, category)
+        : loadPosts(lang);
+    const { prevPost, nextPost } = getAdjacentPosts(posts, decodedSlug);
 
     return (
         <section className="text-gray-600 body-font">
@@ -112,6 +167,36 @@ export default async function PostPage({ params, searchParams }) {
                                     {frontmatter.date}
                                 </p>
                                 <PostContent content={htmlContent} />{" "}
+                                <div className="flex justify-between mt-4">
+                                    {prevPost && (
+                                        <Link
+                                            href={`/posts/${
+                                                prevPost.slug
+                                            }?lang=${lang}${
+                                                category
+                                                    ? `&category=${category}`
+                                                    : ""
+                                            }`}
+                                            className="hover:underline"
+                                        >
+                                            이전 글: {prevPost.title}
+                                        </Link>
+                                    )}
+                                    {nextPost && (
+                                        <Link
+                                            href={`/posts/${
+                                                nextPost.slug
+                                            }?lang=${lang}${
+                                                category
+                                                    ? `&category=${category}`
+                                                    : ""
+                                            }`}
+                                            className="hover:underline"
+                                        >
+                                            다음 글: {nextPost.title}
+                                        </Link>
+                                    )}
+                                </div>
                             </div>
                         </div>
                     </div>

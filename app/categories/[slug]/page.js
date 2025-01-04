@@ -121,7 +121,7 @@ export default async function CategoryPage({ params, searchParams }) {
                                         {post.category}
                                     </p>
                                     <Link
-                                        href={`/posts/${post.slug}`}
+                                        href={`/posts/${post.slug}?lang=${language}&category=${slug}`}
                                         className="block antialiased tracking-normal font-sans text-xl font-semibold leading-snug text-blue-gray-900 mb-2 normal-case transition-colors hover:text-gray-700"
                                     >
                                         {post.title}

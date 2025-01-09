@@ -63,7 +63,10 @@ const loadPostsByCategory = (lang, categorySlug) => {
 
 // 이전 글과 다음 글 찾기 (작성 시간 기준 정렬)
 const getAdjacentPosts = (posts, currentSlug) => {
-    posts.sort((a, b) => a.date - b.date);
+    posts.sort((a, b) => {
+        console.log("post date:", a.date, b.date);
+        return a.date - b.date;
+    });
     const index = posts.findIndex((post) => post.slug === currentSlug);
     const prevPost = index > 0 ? posts[index - 1] : null;
     const nextPost = index < posts.length - 1 ? posts[index + 1] : null;
@@ -166,38 +169,38 @@ export default async function PostPage({ params, searchParams }) {
                                 <p className="leading-relaxed text-gray-500 mb-4 text-sm sm:text-base">
                                     {frontmatter.date}
                                 </p>
-                                <PostContent content={htmlContent} />{" "}
-                                <div className="flex justify-between mt-4">
-                                    {prevPost && (
-                                        <Link
-                                            href={`/posts/${
-                                                prevPost.slug
-                                            }?lang=${lang}${
-                                                category
-                                                    ? `&category=${category}`
-                                                    : ""
-                                            }`}
-                                            className="hover:underline"
-                                        >
-                                            이전 글: {prevPost.title}
-                                        </Link>
-                                    )}
-                                    {nextPost && (
-                                        <Link
-                                            href={`/posts/${
-                                                nextPost.slug
-                                            }?lang=${lang}${
-                                                category
-                                                    ? `&category=${category}`
-                                                    : ""
-                                            }`}
-                                            className="hover:underline"
-                                        >
-                                            다음 글: {nextPost.title}
-                                        </Link>
-                                    )}
-                                </div>
+                                <PostContent content={htmlContent} />
                             </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="flex flex-wrap -m-4">
+                    <div className="w-full p-4 mx-auto">
+                        <div className="flex flex-col ml-4 space-y-2">
+                            {prevPost && (
+                                <Link
+                                    href={`/posts/${
+                                        prevPost.slug
+                                    }?lang=${lang}${
+                                        category ? `&category=${category}` : ""
+                                    }`}
+                                    className="hover:underline"
+                                >
+                                    이전 글: {prevPost.title}
+                                </Link>
+                            )}
+                            {nextPost && (
+                                <Link
+                                    href={`/posts/${
+                                        nextPost.slug
+                                    }?lang=${lang}${
+                                        category ? `&category=${category}` : ""
+                                    }`}
+                                    className="hover:underline"
+                                >
+                                    다음 글: {nextPost.title}
+                                </Link>
+                            )}
                         </div>
                     </div>
                 </div>

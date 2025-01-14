@@ -7,7 +7,7 @@ category: "learning-notes"
 
 ### 오늘의 책 읽기: 추천사 ~ 7장. 오류처리
 
-2024.10.23. Wed.
+![](/images/GZnIkgKacAAt67Q.jpg)
 
 ### 기억에 남는, 기억하고 싶은 내용
 
@@ -53,6 +53,5 @@ category: "learning-notes"
             System.out.println(realCat.getName());  // 출력: Nabi
             System.out.println(nullCat.getName());  // 출력: No Cat
             ```
-            
 
 #노개북 #노마드코더 #개발자북클럽

@@ -79,7 +79,7 @@ async function fetchPosts(page, language = "kr") {
 export default async function HomePage({ searchParams }) {
     const page = parseInt(searchParams.page || "1", 10); // 페이지 번호 파라미터
 
-    // 언어 파라��터를 searchParams에서 가져오거나 기본값으로 "kr" 설정
+    // 언어 파라미터를 searchParams에서 가져오거나 기본값으로 "kr" 설정
     const language = searchParams.lang || "kr";
 
     const { posts, currentPage, totalPages } = await fetchPosts(page, language);
@@ -97,14 +97,21 @@ export default async function HomePage({ searchParams }) {
                                 className="relative flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-none grid gap-2 item sm:grid-cols-2"
                             >
                                 <div className="relative bg-clip-border rounded-xl overflow-hidden bg-white text-gray-700 m-0 p-4">
-                                    <img
-                                        src={
-                                            post.thumbnail ||
-                                            "https://placehold.co/600x400"
-                                        }
-                                        alt={`Thumbnail for ${post.title}`}
-                                        className="object-cover w-full h-full"
-                                    />
+                                    <a href={`/posts/${post.slug}`}>
+                                        <div
+                                            className="relative w-full"
+                                            style={{ aspectRatio: "4/3" }}
+                                        >
+                                            <img
+                                                src={
+                                                    post.thumbnail ||
+                                                    "https://placehold.co/600x400"
+                                                }
+                                                alt={`Thumbnail for ${post.title}`}
+                                                className="absolute inset-0 w-full h-full object-cover"
+                                            />
+                                        </div>
+                                    </a>
                                 </div>
                                 <div className="p-6 px-2 sm:pr-6 sm:pl-4">
                                     <p className="block antialiased font-sans text-sm font-light leading-normal text-inherit mb-4 !font-semibold">

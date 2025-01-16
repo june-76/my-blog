@@ -6,6 +6,8 @@ export async function GET(req: Request) {
         const response = await fetch(apiUrl);
         const data = await response.json();
 
+        console.log("External API response:", data);
+
         return new Response(JSON.stringify(data), {
             status: 200,
             headers: { "Content-Type": "application/json" },

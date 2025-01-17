@@ -21,6 +21,7 @@ export async function GET(req) {
         return new Response(
             JSON.stringify({
                 error: "데이터를 가져오는 중 오류가 발생했습니다.",
+                details: error.message,
             }),
             { status: 500, headers: { "Content-Type": "application/json" } }
         );

@@ -1,11 +1,11 @@
 // app/page.js
 
 async function fetchPosts(page, language = "kr") {
-    const apiUrl = `http://localhost:3000/api/posts`; // Use absolute URL
+    const apiUrl = `http://localhost:3000/api/allPosts?page=${page}&lang=${language}`; // 절대 경로로 수정
     const response = await fetch(apiUrl);
     const data = await response.json();
 
-    console.log("API response data:", data);
+    // console.log("API response data:", data);
 
     const filteredPosts = data.filter(
         (post) =>
@@ -15,9 +15,21 @@ async function fetchPosts(page, language = "kr") {
 
     return {
         posts: filteredPosts,
-        currentPage: 1,
-        totalPages: 1,
+        currentPage: page, // 실제 페이지 번호로 설정
+        totalPages: 1, // 총 페이지 수는 실제 값으로 업데이트 필요
     };
+}
+
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    return new Intl.DateTimeFormat("ko-KR", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+    }).format(date);
 }
 
 // Next.js 14의 새로운 방식: 페이지 데이터 가져오는 방식
@@ -72,7 +84,7 @@ export default async function HomePage({ searchParams }) {
                                         {post.description}
                                     </p>
                                     <p className="block antialiased font-sans text-sm leading-normal text-gray-700 font-normal">
-                                        {post.date}
+                                        {formatDate(post.date)}
                                     </p>
                                 </div>
                             </div>
@@ -114,7 +126,7 @@ export default async function HomePage({ searchParams }) {
                     <a
                         href={`/?${
                             language === "kr" ? "" : `lang=${language}&`
-                        }page={currentPage + 1}`}
+                        }page=${currentPage + 1}`}
                         className="next-page"
                     >
                         다음

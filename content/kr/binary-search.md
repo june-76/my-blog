@@ -2,7 +2,7 @@
 title: "이진탐색"
 date: "2025-01-09 16:08"
 description: ""
-category: "learning-notes"
+category: "cs-algorithm"
 ---
 
 ### 이진탐색

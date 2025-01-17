@@ -1,7 +1,8 @@
 // app/page.js
 
 async function fetchPosts(page, language = "kr") {
-    const apiUrl = `http://localhost:3000/api/allPosts?page=${page}&lang=${language}`; // 절대 경로로 수정
+    // const apiUrl = `http://localhost:3000/api/allPosts?page=${page}&lang=${language}`;
+    const apiUrl = `http://52.79.251.88:3000/api/allPosts?page=${page}&lang=${language}`;
     const response = await fetch(apiUrl);
     const data = await response.json();
 

@@ -10,12 +10,13 @@ const loadCategories = () => {
     // 루트 디렉토리 내에 있는 content 폴더 내의 categories.json 파일을 찾습니다.
     const categoriesFilePath = path.join(
         process.cwd(),
-        "content",
+        "public",
         "categories.json"
     );
 
     // 찾은 파일의 내용을 읽어옵니다.
     const categoriesData = fs.readFileSync(categoriesFilePath, "utf-8");
+    console.log(`categoriesData ===>`, categoriesData);
 
     return JSON.parse(categoriesData);
 };

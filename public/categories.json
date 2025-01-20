@@ -1,0 +1,22 @@
+[
+    {
+        "name": "Personal",
+        "slug": "personal"
+    },
+    {
+        "name": "Learning Notes",
+        "slug": "learning-notes"
+    },
+    {
+        "name": "Project Log",
+        "slug": "project-log"
+    },
+    {
+        "name": "CS / Algorithm",
+        "slug": "cs-algorithm"
+    },
+    {
+        "name": "temp",
+        "slug": "temp"
+    }
+]

@@ -52,7 +52,7 @@ export default async function HomePage({ searchParams }) {
         language
     );
 
-    console.log("HomePage fetched posts:", posts);
+    // console.log("HomePage fetched posts:", posts);
 
     return (
         <>

@@ -5,7 +5,7 @@ import { fetchData } from "../../utils/api";
 export async function GET(req) {
     const { searchParams } = new URL(req.url);
     const page = searchParams.get("page") || "1";
-    const lang = searchParams.get("lang") || "en";
+    const lang = searchParams.get("lang") || "kr";
     const category = searchParams.get("category") || "";
 
     console.log("categoryPosts GET Called...", { page, lang, category });

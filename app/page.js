@@ -1,23 +1,30 @@
 // app/page.js
 
-async function fetchPosts(page, language = "kr") {
+async function fetchAllPosts(page, language = "kr") {
     // const apiUrl = `http://localhost:3000/api/allPosts?page=${page}&lang=${language}`;
     const apiUrl = `http://52.79.251.88:3000/api/allPosts?page=${page}&lang=${language}`;
+    console.log("API URL:", apiUrl);
+
     const response = await fetch(apiUrl);
     const data = await response.json();
 
-    // console.log("API response data:", data);
+    // console.log("allPosts API response data:", data);
 
-    const filteredPosts = data.filter(
-        (post) =>
-            post.language === language ||
-            (post.language === "" && language === "kr")
+    // data.posts가 배열인지 확인하고, 배열이 아니면 빈 배열로 초기화
+    const postsArray = Array.isArray(data.posts) ? data.posts : data;
+
+    // console.log("Posts array:", postsArray);
+
+    const filteredPosts = postsArray.filter(
+        (post) => post.language === language || !post.language
     );
+
+    // console.log("Filtered posts:", filteredPosts);
 
     return {
         posts: filteredPosts,
-        currentPage: page, // 실제 페이지 번호로 설정
-        totalPages: 1, // 총 페이지 수는 실제 값으로 업데이트 필요
+        currentPage: data.currentPage || page, // 실제 페이지 번호로 설정
+        totalPages: data.totalPages || 1, // 총 페이지 수는 실제 값으로 업데이트 필요
     };
 }
 
@@ -38,9 +45,17 @@ export default async function HomePage({ searchParams }) {
     const page = parseInt(searchParams.page || "1", 10); // 페이지 번호 파라미터
 
     // 언어 파라미터를 searchParams에서 가져오거나 기본값으로 "kr" 설정
-    const language = searchParams.lang || "kr";
+    // const language = searchParams.lang || "kr";
+    const language = searchParams.lang;
 
-    const { posts, currentPage, totalPages } = await fetchPosts(page, language);
+    // console.log("HomePage called with params:", { page, language });
+
+    const { posts, currentPage, totalPages } = await fetchAllPosts(
+        page,
+        language
+    );
+
+    // console.log("HomePage fetched posts:", posts);
 
     return (
         <>
@@ -98,9 +113,9 @@ export default async function HomePage({ searchParams }) {
                 {/* 이전 페이지 */}
                 {currentPage > 1 && (
                     <a
-                        href={`/?${
-                            language === "kr" ? "" : `lang=${language}&`
-                        }page=${currentPage - 1}`}
+                        href={`/?${language === `lang=${language}&`}page=${
+                            currentPage - 1
+                        }`}
                         className="prev-page"
                     >
                         이전
@@ -110,10 +125,11 @@ export default async function HomePage({ searchParams }) {
                 {/* 페이지 위치 지정 */}
                 {[...Array(totalPages)].map((_, index) => (
                     <a
-                        key={index}
+                        // key={index}
+                        key={`page-${index}`}
                         href={`/?${
-                            language === "kr" ? "" : `lang=${language}&`
-                        }page=${index + 1}`}
+                            language === `lang=${language}&`
+                        }page={index + 1}`}
                         className={`page-button ${
                             currentPage === index + 1 ? "active" : ""
                         }`}
@@ -126,8 +142,8 @@ export default async function HomePage({ searchParams }) {
                 {currentPage < totalPages && (
                     <a
                         href={`/?${
-                            language === "kr" ? "" : `lang=${language}&`
-                        }page=${currentPage + 1}`}
+                            language === `lang=${language}&`
+                        }page={currentPage + 1}`}
                         className="next-page"
                     >
                         다음

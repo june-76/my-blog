@@ -45,8 +45,7 @@ export default async function CategoryPage({ params, searchParams }) {
                     ) : (
                         posts.map((post) => (
                             <div
-                                // key={post.slug}
-                                key={`page-${post.slug}`}
+                                key={`page-${post.id}`}
                                 className="relative flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-none grid gap-2 item sm:grid-cols-2"
                             >
                                 <div className="relative bg-clip-border rounded-xl overflow-hidden bg-white text-gray-700 m-0 p-4">
@@ -64,7 +63,7 @@ export default async function CategoryPage({ params, searchParams }) {
                                         {post.category}
                                     </p>
                                     <a
-                                        href={`/posts/${post.slug}?lang=${language}&category=${slug}`} // slug는 여기에만 사용
+                                        href={`/posts/${post.id}?lang=${language}`}
                                         className="block antialiased tracking-normal font-sans text-xl font-semibold leading-snug text-blue-gray-900 mb-2 normal-case transition-colors hover:text-gray-700"
                                     >
                                         {post.title}

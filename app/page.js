@@ -43,19 +43,16 @@ function formatDate(dateString) {
 // Next.js 14의 새로운 방식: 페이지 데이터 가져오는 방식
 export default async function HomePage({ searchParams }) {
     const page = parseInt(searchParams.page || "1", 10); // 페이지 번호 파라미터
+    const language = searchParams.lang || "kr"; // 언어 파라미터를 searchParams에서 가져오거나 기본값으로 "kr" 설정
 
-    // 언어 파라미터를 searchParams에서 가져오거나 기본값으로 "kr" 설정
-    // const language = searchParams.lang || "kr";
-    const language = searchParams.lang;
-
-    // console.log("HomePage called with params:", { page, language });
+    console.log("HomePage called with params:", { page, language });
 
     const { posts, currentPage, totalPages } = await fetchAllPosts(
         page,
         language
     );
 
-    // console.log("HomePage fetched posts:", posts);
+    console.log("HomePage fetched posts:", posts);
 
     return (
         <>
@@ -70,10 +67,14 @@ export default async function HomePage({ searchParams }) {
                                 className="relative flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-none grid gap-2 item sm:grid-cols-2"
                             >
                                 <div className="relative bg-clip-border rounded-xl overflow-hidden bg-white text-gray-700 m-0 p-4">
-                                    <a href={`/posts/${post.slug}`}>
+                                    <a
+                                        href={`/posts/${post.id}?lang=${language}`}
+                                    >
                                         <div
                                             className="relative w-full"
-                                            style={{ aspectRatio: "4/3" }}
+                                            style={{
+                                                aspectRatio: "4/3",
+                                            }}
                                         >
                                             <img
                                                 src={
@@ -91,7 +92,7 @@ export default async function HomePage({ searchParams }) {
                                         {post.category}
                                     </p>
                                     <a
-                                        href={`/posts/${post.slug}`}
+                                        href={`/posts/${post.id}?lang=${language}`}
                                         className="block antialiased tracking-normal font-sans text-xl font-semibold leading-snug text-blue-gray-900 mb-2 normal-case transition-colors hover:text-gray-700"
                                     >
                                         {post.title}
@@ -113,9 +114,7 @@ export default async function HomePage({ searchParams }) {
                 {/* 이전 페이지 */}
                 {currentPage > 1 && (
                     <a
-                        href={`/?${language === `lang=${language}&`}page=${
-                            currentPage - 1
-                        }`}
+                        href={`/?lang=${language}&page=${currentPage - 1}`}
                         className="prev-page"
                     >
                         이전
@@ -125,11 +124,8 @@ export default async function HomePage({ searchParams }) {
                 {/* 페이지 위치 지정 */}
                 {[...Array(totalPages)].map((_, index) => (
                     <a
-                        // key={index}
                         key={`page-${index}`}
-                        href={`/?${
-                            language === `lang=${language}&`
-                        }page={index + 1}`}
+                        href={`/?lang=${language}&page=${index + 1}`}
                         className={`page-button ${
                             currentPage === index + 1 ? "active" : ""
                         }`}
@@ -141,9 +137,7 @@ export default async function HomePage({ searchParams }) {
                 {/* 다음 페이지 */}
                 {currentPage < totalPages && (
                     <a
-                        href={`/?${
-                            language === `lang=${language}&`
-                        }page={currentPage + 1}`}
+                        href={`/?lang=${language}&page=${currentPage + 1}`}
                         className="next-page"
                     >
                         다음

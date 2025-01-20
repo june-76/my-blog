@@ -5,7 +5,7 @@ import { fetchData } from "../../utils/api";
 export async function GET(req) {
     const { searchParams } = new URL(req.url);
     const postId = searchParams.get("postId");
-    const lang = searchParams.get("lang") || "en";
+    const lang = searchParams.get("lang") || "kr";
 
     console.log("postContents GET Called...", { postId, lang });
 

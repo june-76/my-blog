@@ -1,7 +1,11 @@
 // app/categories/[slug]/page.js
 
+import dotenv from "dotenv";
+
+dotenv.config();
+
 async function fetchCategoryPosts(category, page, language = "kr") {
-    const apiUrl = `http://52.79.251.88:3000/api/categoryPosts?category=${category}&page=${page}&lang=${language}`;
+    const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/categoryPosts?category=${category}&page=${page}&lang=${language}`;
     console.log("API URL:", apiUrl);
 
     const response = await fetch(apiUrl);

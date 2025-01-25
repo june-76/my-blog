@@ -1,8 +1,13 @@
 // app/page.js
 
+import dotenv from "dotenv";
+
+dotenv.config();
+
 async function fetchAllPosts(page, language = "kr") {
     // const apiUrl = `http://localhost:3000/api/allPosts?page=${page}&lang=${language}`;
-    const apiUrl = `http://52.79.251.88:3000/api/allPosts?page=${page}&lang=${language}`;
+    const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/allPosts?page=${page}&lang=${language}`;
+
     console.log("API URL:", apiUrl);
 
     const response = await fetch(apiUrl);

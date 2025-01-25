@@ -1,5 +1,9 @@
 // app/utils/api.ts
 
+import dotenv from "dotenv";
+
+dotenv.config();
+
 export async function fetchData(
     apiPath: string,
     queryParams: Record<string, string | number> = {}
@@ -12,7 +16,7 @@ export async function fetchData(
         }, {} as Record<string, string>)
     ).toString();
 
-    const apiUrl = `http://52.79.251.88:3000/api/${apiPath}${
+    const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/${apiPath}${
         query ? `?${query}` : ""
     }`;
 

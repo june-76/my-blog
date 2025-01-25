@@ -1,7 +1,11 @@
 // app/posts/[slug]/page.js
 
+import dotenv from "dotenv";
+
+dotenv.config();
+
 async function fetchPostData(postId, lang) {
-    const apiUrl = `http://52.79.251.88:3000/api/postContents?postId=${postId}&lang=${lang}`;
+    const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/postContents?postId=${postId}&lang=${lang}`;
     console.log("API URL:", apiUrl); // API 요청 경로를 로그로 확인
     const response = await fetch(apiUrl);
     if (!response.ok) {

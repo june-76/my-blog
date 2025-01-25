@@ -1,23 +1,33 @@
 // app/layout.js
 
-import fs from "fs";
-import path from "path";
 import "./globals.css";
 import Header from "./components/Header";
 import { Analytics } from "@vercel/analytics/react";
 
+// 카테고리 하드코딩
 const loadCategories = () => {
-    // 루트 디렉토리 내에 있는 content 폴더 내의 categories.json 파일을 찾습니다.
-    const categoriesFilePath = path.join(
-        process.cwd(),
-        "content",
-        "categories.json"
-    );
-
-    // 찾은 파일의 내용을 읽어옵니다.
-    const categoriesData = fs.readFileSync(categoriesFilePath, "utf-8");
-
-    return JSON.parse(categoriesData);
+    return [
+        {
+            name: "Personal",
+            slug: "personal",
+        },
+        {
+            name: "Learning Notes",
+            slug: "learning-notes",
+        },
+        {
+            name: "Project Log",
+            slug: "project-log",
+        },
+        {
+            name: "CS / Algorithm",
+            slug: "cs-algorithm",
+        },
+        {
+            name: "temp",
+            slug: "temp",
+        },
+    ];
 };
 
 export const metadata = {
@@ -25,8 +35,6 @@ export const metadata = {
     description: "june's blog",
 };
 
-// SSR Functional Component
-// childer: 부모 컴포넌트로부터 전달 받은 자식 요소
 export default function RootLayout({ children }) {
     const categories = loadCategories();
 

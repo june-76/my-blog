@@ -7,7 +7,7 @@ category: "learning-notes"
 
 ### FINAL
 
-2024.10.31. Wed.
+![](/images/GZnIkgKacAAt67Q.jpg)
 
 ### 노개북 챌린지를 완주하며
 

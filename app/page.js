@@ -1,106 +1,85 @@
 // app/page.js
 
-import fs from "fs";
-import path from "path";
-import matter from "gray-matter";
-import { remark } from "remark";
-import html from "remark-html";
-import remarkBreaks from "remark-breaks";
+import dotenv from "dotenv";
 
-const POSTS_PER_PAGE = 8;
+dotenv.config();
 
-async function fetchPosts(page, language = "kr") {
-    // language 값이 숫자로 전달되지 않도록 문자열로 처리
-    if (typeof language !== "string") {
-        language = "kr"; // 기본값 "kr"로 설정
-    }
+async function fetchAllPosts(page, language = "kr") {
+    // const apiUrl = `http://localhost:3000/api/allPosts?page=${page}&lang=${language}`;
+    const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/allPosts?page=${page}&lang=${language}`;
 
-    // 해당 언어 폴더 경로 설정
-    const folderPath = path.join(process.cwd(), "content", language);
+    console.log("API URL:", apiUrl);
 
-    // 경로 로그 추가
-    console.log(`Looking for posts in: ${folderPath}`);
+    const response = await fetch(apiUrl);
+    const data = await response.json();
 
-    // 해당 언어 폴더가 없으면 빈 배열 반환
-    if (!fs.existsSync(folderPath)) {
-        return { posts: [], currentPage: page, totalPages: 0 };
-    }
+    // console.log("allPosts API response data:", data);
 
-    const files = fs.readdirSync(folderPath);
+    // data.posts가 배열인지 확인하고, 배열이 아니면 빈 배열로 초기화
+    const postsArray = Array.isArray(data.posts) ? data.posts : data;
 
-    const posts = files.map((filename) => {
-        const slug = filename.replace(".md", "");
-        const markdownWithMeta = fs.readFileSync(
-            path.join(folderPath, filename),
-            "utf-8"
-        );
-        const { data: frontmatter } = matter(markdownWithMeta);
+    // console.log("Posts array:", postsArray);
 
-        const processedContent = remark()
-            .use(remarkBreaks)
-            .use(html)
-            .processSync(markdownWithMeta);
-        const contentHtml = processedContent.toString();
-
-        const firstImageMatch = contentHtml.match(/<img[^>]+src="([^">]+)"/);
-        const thumbnail = firstImageMatch ? firstImageMatch[1] : null;
-
-        return {
-            slug,
-            title: frontmatter.title || "Untitled",
-            category: frontmatter.category || "Uncategorized",
-            date: frontmatter.date || "No Date",
-            thumbnail,
-        };
-    });
-
-    const validPosts = posts.filter(
-        (post) => post.title !== "Untitled" && post.date !== "No Date"
+    const filteredPosts = postsArray.filter(
+        (post) => post.language === language || !post.language
     );
 
-    validPosts.sort((a, b) => new Date(b.date) - new Date(a.date));
-
-    const startIndex = (page - 1) * POSTS_PER_PAGE;
-    const selectedPosts = validPosts.slice(
-        startIndex,
-        startIndex + POSTS_PER_PAGE
-    );
-
-    const totalPages = Math.ceil(validPosts.length / POSTS_PER_PAGE);
+    // console.log("Filtered posts:", filteredPosts);
 
     return {
-        posts: selectedPosts,
-        currentPage: page,
-        totalPages,
+        posts: filteredPosts,
+        currentPage: data.currentPage || page, // 실제 페이지 번호로 설정
+        totalPages: data.totalPages || 1, // 총 페이지 수는 실제 값으로 업데이트 필요
     };
+}
+
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    return new Intl.DateTimeFormat("ko-KR", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+    }).format(date);
 }
 
 // Next.js 14의 새로운 방식: 페이지 데이터 가져오는 방식
 export default async function HomePage({ searchParams }) {
     const page = parseInt(searchParams.page || "1", 10); // 페이지 번호 파라미터
+    const language = searchParams.lang || "kr"; // 언어 파라미터를 searchParams에서 가져오거나 기본값으로 "kr" 설정
 
-    // 언어 파라��터를 searchParams에서 가져오거나 기본값으로 "kr" 설정
-    const language = searchParams.lang || "kr";
+    console.log("HomePage called with params:", { page, language });
 
-    const { posts, currentPage, totalPages } = await fetchPosts(page, language);
+    const { posts, currentPage, totalPages } = await fetchAllPosts(
+        page,
+        language
+    );
+
+    // console.log("HomePage fetched posts:", posts);
 
     return (
         <>
             <section className="grid p-8 place-items-center">
-                <div className="container grid grid-cols-1 gap-8 my-auto sm:grid-cols-2 lg:grid-cols-2">
+                <div className="container grid grid-cols-1 gap-8 my-auto lg:grid-cols-2">
                     {posts.length === 0 ? (
                         <div>작성된 포스트가 없습니다.</div>
                     ) : (
                         posts.map((post) => (
                             <div
-                                key={post.slug}
+                                key={post.id}
                                 className="relative flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-none grid gap-2 item sm:grid-cols-2"
                             >
                                 <div className="relative bg-clip-border rounded-xl overflow-hidden bg-white text-gray-700 m-0 p-4">
-                                    <a href={`/posts/${post.slug}`}>
+                                    <a
+                                        href={`/posts/${post.id}?lang=${language}`}
+                                    >
                                         <div
                                             className="relative w-full"
-                                            style={{ aspectRatio: "4/3" }}
+                                            style={{
+                                                aspectRatio: "4/3",
+                                            }}
                                         >
                                             <img
                                                 src={
@@ -118,7 +97,7 @@ export default async function HomePage({ searchParams }) {
                                         {post.category}
                                     </p>
                                     <a
-                                        href={`/posts/${post.slug}`}
+                                        href={`/posts/${post.id}?lang=${language}`}
                                         className="block antialiased tracking-normal font-sans text-xl font-semibold leading-snug text-blue-gray-900 mb-2 normal-case transition-colors hover:text-gray-700"
                                     >
                                         {post.title}
@@ -126,16 +105,9 @@ export default async function HomePage({ searchParams }) {
                                     <p className="block antialiased font-sans text-base leading-relaxed text-inherit mb-8 font-normal !text-gray-500">
                                         {post.description}
                                     </p>
-                                    <div className="flex items-center gap-4">
-                                        <div>
-                                            <p className="block antialiased font-sans text-base font-light leading-relaxed text-blue-gray-900 mb-0.5 !font-semibold">
-                                                June
-                                            </p>
-                                            <p className="block antialiased font-sans text-sm leading-normal text-gray-700 font-normal">
-                                                {post.date}
-                                            </p>
-                                        </div>
-                                    </div>
+                                    <p className="block antialiased font-sans text-sm leading-normal text-gray-700 font-normal">
+                                        {formatDate(post.date)}
+                                    </p>
                                 </div>
                             </div>
                         ))
@@ -147,9 +119,7 @@ export default async function HomePage({ searchParams }) {
                 {/* 이전 페이지 */}
                 {currentPage > 1 && (
                     <a
-                        href={`/?${
-                            language === "kr" ? "" : `lang=${language}&`
-                        }page=${currentPage - 1}`}
+                        href={`/?lang=${language}&page=${currentPage - 1}`}
                         className="prev-page"
                     >
                         이전
@@ -159,10 +129,8 @@ export default async function HomePage({ searchParams }) {
                 {/* 페이지 위치 지정 */}
                 {[...Array(totalPages)].map((_, index) => (
                     <a
-                        key={index}
-                        href={`/?${
-                            language === "kr" ? "" : `lang=${language}&`
-                        }page=${index + 1}`}
+                        key={`page-${index}`}
+                        href={`/?lang=${language}&page=${index + 1}`}
                         className={`page-button ${
                             currentPage === index + 1 ? "active" : ""
                         }`}
@@ -174,9 +142,7 @@ export default async function HomePage({ searchParams }) {
                 {/* 다음 페이지 */}
                 {currentPage < totalPages && (
                     <a
-                        href={`/?${
-                            language === "kr" ? "" : `lang=${language}&`
-                        }page=${currentPage + 1}`}
+                        href={`/?lang=${language}&page=${currentPage + 1}`}
                         className="next-page"
                     >
                         다음

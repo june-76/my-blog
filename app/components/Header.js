@@ -58,7 +58,7 @@ function HeaderContent({ categories }) {
                 <ul className="category-list">
                     <li>
                         <Link
-                            href="/"
+                            href={language === "kr" ? "/" : "/?lang=jp"}
                             className={`category-link ${
                                 isActiveCategory("home") ? "active" : ""
                             }`}

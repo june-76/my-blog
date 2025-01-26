@@ -93,19 +93,19 @@ export default async function HomePage({ searchParams }) {
                                     </a>
                                 </div>
                                 <div className="p-6 px-2 sm:pr-6 sm:pl-4">
-                                    <p className="block antialiased font-sans text-sm font-light leading-normal text-inherit mb-4 !font-semibold">
+                                    <p className="block antialiased text-sm font-light leading-normal text-inherit mb-4 !font-semibold">
                                         {post.category}
                                     </p>
                                     <a
                                         href={`/posts/${post.id}?lang=${language}`}
-                                        className="block antialiased tracking-normal font-sans text-xl font-semibold leading-snug text-blue-gray-900 mb-2 normal-case transition-colors hover:text-gray-700"
+                                        className="block antialiased tracking-normal text-xl font-semibold leading-snug text-blue-gray-900 mb-2 normal-case transition-colors hover:text-gray-700"
                                     >
                                         {post.title}
                                     </a>
-                                    <p className="block antialiased font-sans text-base leading-relaxed text-inherit mb-8 font-normal !text-gray-500">
+                                    <p className="block antialiased text-base leading-relaxed text-inherit mb-8 font-normal !text-gray-500">
                                         {post.description}
                                     </p>
-                                    <p className="block antialiased font-sans text-sm leading-normal text-gray-700 font-normal">
+                                    <p className="block antialiased text-sm leading-normal text-gray-700 font-normal">
                                         {formatDate(post.date)}
                                     </p>
                                 </div>

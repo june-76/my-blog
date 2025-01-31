@@ -1,34 +1,42 @@
 // app/posts/[slug]/page.js
 
-import dotenv from "dotenv";
+import { unified } from "unified";
+import remarkParse from "remark-parse";
+import remarkHtml from "remark-html";
 
-dotenv.config();
+async function convertMarkdownToHtml(markdown) {
+    const processedContent = await unified()
+        .use(remarkParse)
+        .use(remarkHtml)
+        .process(markdown);
+    return processedContent.toString();
+}
 
 async function fetchPostData(postId, lang) {
     const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/postContents?postId=${postId}&lang=${lang}`;
     console.log("API URL:", apiUrl); // API 요청 경로를 로그로 확인
+
     const response = await fetch(apiUrl);
     if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
     }
-    return await response.json();
+
+    const data = await response.json();
+
+    // 마크다운을 HTML로 변환
+    data.content = await convertMarkdownToHtml(data.content);
+
+    return data;
 }
 
 export default async function PostPage({ params, searchParams }) {
     const { slug } = params;
-
-    console.log(`slug: ${slug}`);
-    console.log(`searchParams:`, searchParams);
-
-    const postId = slug; // slug를 postId로 사용
     const lang = searchParams.lang || "kr";
-
-    console.log(`lang: ${lang}`); // lang 파라미터를 로그로 확인
 
     let postData;
 
     try {
-        postData = await fetchPostData(postId, lang);
+        postData = await fetchPostData(slug, lang);
     } catch (error) {
         return <div>오류 발생: {error.message}</div>;
     }

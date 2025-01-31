@@ -3,6 +3,24 @@
 import "./globals.css";
 import Header from "./components/Header";
 import { Analytics } from "@vercel/analytics/react";
+import { Ubuntu } from "next/font/google";
+import { Noto_Sans_KR } from "next/font/google";
+import { Orbit } from "next/font/google";
+
+const ubuntu = Ubuntu({
+    weight: "400",
+    subsets: ["latin"],
+});
+
+const notoSansKR = Noto_Sans_KR({
+    weight: "200",
+    subsets: ["latin"],
+});
+
+const orbit = Orbit({
+    weight: "400",
+    subsets: ["latin"],
+});
 
 // 카테고리 하드코딩
 const loadCategories = () => {
@@ -23,10 +41,6 @@ const loadCategories = () => {
             name: "CS / Algorithm",
             slug: "cs-algorithm",
         },
-        {
-            name: "temp",
-            slug: "temp",
-        },
     ];
 };
 
@@ -39,9 +53,8 @@ export default function RootLayout({ children }) {
     const categories = loadCategories();
 
     return (
-        <html lang="ko">
-            <body>
-                {/* 헤더에 카테고리 데이터 전달 */}
+        <html>
+            <body className={`${orbit.className}`}>
                 <Header categories={categories} />
                 <main>{children}</main>
                 <footer

@@ -1,8 +1,5 @@
 /* globals.css */
 
-/* Import Google Font */
-@import url("https://fonts.googleapis.com/css2?family=Orbit:wght@400;700&display=swap");
-
 /* Tailwind CSS Layers */
 @tailwind base;
 @tailwind components;
@@ -55,6 +52,10 @@ header .about-link {
     color: #fff;
     text-decoration: none;
     margin-top: 4px;
+}
+
+header .about-link.highlight {
+    color: #fade27;
 }
 
 header .language-toggle {
@@ -224,4 +225,12 @@ ul {
 
 .switch-slider.jp-active {
     transform: translateX(28px);
+}
+
+.highlight {
+    color: #fade27;
+}
+
+.hover-highlight:hover {
+    color: #fade27;
 }

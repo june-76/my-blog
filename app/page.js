@@ -72,40 +72,29 @@ export default async function HomePage({ searchParams }) {
                                 className="relative flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-none grid gap-2 item sm:grid-cols-2"
                             >
                                 <div className="relative bg-clip-border rounded-xl overflow-hidden bg-white text-gray-700 m-0 p-4">
-                                    <a
-                                        href={`/posts/${post.id}?lang=${language}`}
-                                    >
-                                        <div
-                                            className="relative w-full"
-                                            style={{
-                                                aspectRatio: "4/3",
-                                            }}
-                                        >
-                                            <img
-                                                src={
-                                                    post.thumbnail ||
-                                                    "https://placehold.co/600x400"
-                                                }
-                                                alt={`Thumbnail for ${post.title}`}
-                                                className="absolute inset-0 w-full h-full object-cover"
-                                            />
-                                        </div>
-                                    </a>
+                                    <img
+                                        src={
+                                            post.thumbnail ||
+                                            "https://placehold.co/600x400"
+                                        }
+                                        alt={`Thumbnail for ${post.title}`}
+                                        className="object-cover w-full h-full"
+                                    />
                                 </div>
                                 <div className="p-6 px-2 sm:pr-6 sm:pl-4">
-                                    <p className="block antialiased font-sans text-sm font-light leading-normal text-inherit mb-4 !font-semibold">
+                                    <p className="block antialiased text-sm font-light leading-normal text-inherit mb-4 !font-semibold">
                                         {post.category}
                                     </p>
                                     <a
                                         href={`/posts/${post.id}?lang=${language}`}
-                                        className="block antialiased tracking-normal font-sans text-xl font-semibold leading-snug text-blue-gray-900 mb-2 normal-case transition-colors hover:text-gray-700"
+                                        className="block antialiased tracking-normal text-xl font-semibold leading-snug text-blue-gray-900 mb-2 normal-case transition-colors hover:text-gray-700"
                                     >
                                         {post.title}
                                     </a>
-                                    <p className="block antialiased font-sans text-base leading-relaxed text-inherit mb-8 font-normal !text-gray-500">
+                                    <p className="block antialiased text-base leading-relaxed text-inherit mb-8 font-normal !text-gray-500">
                                         {post.description}
                                     </p>
-                                    <p className="block antialiased font-sans text-sm leading-normal text-gray-700 font-normal">
+                                    <p className="block antialiased text-sm leading-normal text-gray-700 font-normal">
                                         {formatDate(post.date)}
                                     </p>
                                 </div>

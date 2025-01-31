@@ -26,6 +26,8 @@ function HeaderContent({ categories }) {
     const pathname = usePathname(); // 현재 경로 가져오기
     const language = searchParams.get("lang") || "kr";
 
+    console.log("Current pathname:", pathname); // Debugging line
+
     // 현재 활성화된 카테고리 확인 함수
     const isActiveCategory = (categorySlug) => {
         if (categorySlug === "home") {
@@ -44,13 +46,22 @@ function HeaderContent({ categories }) {
         window.location.href = newUrl; // URL을 직접 설정하여 페이지 이동
     };
 
+    // 특정 경로에서 언어 토글 컨테이너를 숨기기 위한 조건
+    const hideLanguageToggle = pathname.startsWith("/posts");
+
     return (
         <header>
             <div className="header-links">
                 <Link href="/" className="site-link">
                     junefromjuly
                 </Link>
-                <Link href="/about" className="about-link">
+                <Link
+                    href="/about"
+                    className={`about-link ${
+                        pathname === "/about" ? "highlight" : ""
+                    }`}
+                    style={pathname === "/about" ? { color: "#fade27" } : {}}
+                >
                     About
                 </Link>
             </div>
@@ -95,33 +106,35 @@ function HeaderContent({ categories }) {
                 </ul>
             </nav>
 
-            <div className="language-toggle-container">
-                <button
-                    className="language-switch-button"
-                    onClick={toggleLanguage}
-                    aria-label="Toggle Language"
-                >
-                    <span
-                        className={`switch-option kr ${
-                            language === "kr" ? "active" : ""
-                        }`}
+            {!hideLanguageToggle && (
+                <div className="language-toggle-container">
+                    <button
+                        className="language-switch-button"
+                        onClick={toggleLanguage}
+                        aria-label="Toggle Language"
                     >
-                        KR
-                    </span>
-                    <span
-                        className={`switch-option jp ${
-                            language === "jp" ? "active" : ""
-                        }`}
-                    >
-                        JP
-                    </span>
-                    <span
-                        className={`switch-slider ${
-                            language === "jp" ? "jp-active" : ""
-                        }`}
-                    ></span>
-                </button>
-            </div>
+                        <span
+                            className={`switch-option kr ${
+                                language === "kr" ? "active" : ""
+                            }`}
+                        >
+                            KR
+                        </span>
+                        <span
+                            className={`switch-option jp ${
+                                language === "jp" ? "active" : ""
+                            }`}
+                        >
+                            JP
+                        </span>
+                        <span
+                            className={`switch-slider ${
+                                language === "jp" ? "jp-active" : ""
+                            }`}
+                        ></span>
+                    </button>
+                </div>
+            )}
         </header>
     );
 }

@@ -72,25 +72,14 @@ export default async function HomePage({ searchParams }) {
                                 className="relative flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-none grid gap-2 item sm:grid-cols-2"
                             >
                                 <div className="relative bg-clip-border rounded-xl overflow-hidden bg-white text-gray-700 m-0 p-4">
-                                    <a
-                                        href={`/posts/${post.id}?lang=${language}`}
-                                    >
-                                        <div
-                                            className="relative w-full"
-                                            style={{
-                                                aspectRatio: "4/3",
-                                            }}
-                                        >
-                                            <img
-                                                src={
-                                                    post.thumbnail ||
-                                                    "https://placehold.co/600x400"
-                                                }
-                                                alt={`Thumbnail for ${post.title}`}
-                                                className="absolute inset-0 w-full h-full object-cover"
-                                            />
-                                        </div>
-                                    </a>
+                                    <img
+                                        src={
+                                            post.thumbnail ||
+                                            "https://placehold.co/600x400"
+                                        }
+                                        alt={`Thumbnail for ${post.title}`}
+                                        className="object-cover w-full h-full"
+                                    />
                                 </div>
                                 <div className="p-6 px-2 sm:pr-6 sm:pl-4">
                                     <p className="block antialiased text-sm font-light leading-normal text-inherit mb-4 !font-semibold">

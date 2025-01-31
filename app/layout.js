@@ -41,10 +41,6 @@ const loadCategories = () => {
             name: "CS / Algorithm",
             slug: "cs-algorithm",
         },
-        {
-            name: "temp",
-            slug: "temp",
-        },
     ];
 };
 

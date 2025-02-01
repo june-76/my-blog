@@ -9,30 +9,42 @@ async function convertMarkdownToHtml(markdown) {
         .use(remarkParse)
         .use(remarkHtml)
         .process(markdown);
-    return processedContent.toString();
+
+    return processedContent.toString().trim();
 }
 
 async function fetchPostData(postId, lang) {
     const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/postContents?postId=${postId}&lang=${lang}`;
-    console.log("API URL:", apiUrl); // API 요청 경로를 로그로 확인
+    console.log("API URL:", apiUrl);
 
     const response = await fetch(apiUrl);
+
     if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
     }
 
     const data = await response.json();
-
-    // 마크다운을 HTML로 변환
-    data.content = await convertMarkdownToHtml(data.content);
+    data.content = await convertMarkdownToHtml(data.content); // 마크다운을 HTML로 변환
 
     return data;
+}
+
+function formatDate(dateString) {
+    const date = new Date(dateString);
+
+    return new Intl.DateTimeFormat("ko-KR", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+    }).format(date);
 }
 
 export default async function PostPage({ params, searchParams }) {
     const { slug } = params;
     const lang = searchParams.lang || "kr";
-
     let postData;
 
     try {
@@ -67,14 +79,14 @@ export default async function PostPage({ params, searchParams }) {
                                     {title}
                                 </h1>
                                 <p className="leading-relaxed text-gray-500 mb-4 text-sm sm:text-base">
-                                    {new Date(date).toLocaleDateString("ko-KR")}
+                                    {formatDate(postData.date)}
                                 </p>
-                                <p
+                                <div
                                     className="text-gray-700 leading-relaxed"
                                     dangerouslySetInnerHTML={{
                                         __html: content,
                                     }}
-                                ></p>
+                                ></div>
                                 <p className="text-gray-400 mt-4">
                                     {description}
                                 </p>

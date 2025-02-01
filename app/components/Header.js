@@ -26,7 +26,7 @@ function HeaderContent({ categories }) {
     const pathname = usePathname(); // 현재 경로 가져오기
     const language = searchParams.get("lang") || "kr";
 
-    console.log("Current pathname:", pathname); // Debugging line
+    console.log("Current pathname:", pathname);
 
     // 현재 활성화된 카테고리 확인 함수
     const isActiveCategory = (categorySlug) => {

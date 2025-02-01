@@ -25,7 +25,7 @@ body {
 /* Header styles */
 header {
     background-color: #5e5e5e;
-    color: #fff;
+    color: #f5f5f5;
     padding: 10px 0;
     text-align: center;
     position: relative;
@@ -42,14 +42,14 @@ header .header-links {
 header .site-link {
     font-size: 20px;
     font-style: italic;
-    color: #ddd;
+    color: #d5d5d5;
     text-decoration: none;
 }
 
 header .about-link {
     font-size: 16px;
     font-style: italic;
-    color: #fff;
+    color: #f5f5f5;
     text-decoration: none;
     margin-top: 4px;
 }
@@ -78,7 +78,7 @@ header .language-toggle-button {
 }
 
 header .language-toggle-button.active {
-    color: #f0f0f0;
+    color: #f5f5f5;
 }
 
 header .language-text {
@@ -105,7 +105,7 @@ nav li {
 }
 
 nav a {
-    color: #fff;
+    color: #f5f5f5;
     font-weight: bold;
     text-decoration: none;
 }
@@ -164,13 +164,13 @@ ul {
     margin: 0 5px;
     padding: 8px 12px;
     border-radius: 4px;
-    background-color: #f0f0f0;
+    background-color: #f5f5f5;
     text-decoration: none;
 }
 
 .pagination .page-button.active {
     background-color: #5e5e5e;
-    color: white;
+    color: f5f5f5;
 }
 
 .pagination .prev-page,
@@ -178,7 +178,7 @@ ul {
     padding: 8px 12px;
     border-radius: 4px;
     background-color: #5e5e5e;
-    color: white;
+    color: f5f5f5;
 }
 
 /* 언어 토글 스위치 스타일 */
@@ -233,4 +233,8 @@ ul {
 
 .hover-highlight:hover {
     color: #fade27;
+}
+
+.bg-f5f5f5 {
+    background-color: #f5f5f5;
 }

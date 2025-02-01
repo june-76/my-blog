@@ -7,7 +7,7 @@
 import Image from "next/image";
 
 export default function AboutPage({ searchParams }) {
-    const language = searchParams.lang || "kr"; // URL 쿼리 파라미터에서 언어 설정을 가져옴
+    const language = searchParams.lang || "kr";
 
     const content = {
         kr: {

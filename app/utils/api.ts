@@ -1,9 +1,5 @@
 // app/utils/api.ts
 
-import dotenv from "dotenv";
-
-dotenv.config();
-
 export async function fetchData(
     apiPath: string,
     queryParams: Record<string, string | number> = {}

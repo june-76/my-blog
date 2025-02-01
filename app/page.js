@@ -1,13 +1,8 @@
 // app/page.js
 
-import dotenv from "dotenv";
-
-dotenv.config();
-
 async function fetchAllPosts(page, language = "kr") {
     // const apiUrl = `http://localhost:3000/api/allPosts?page=${page}&lang=${language}`;
     const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/allPosts?page=${page}&lang=${language}`;
-
     console.log("API URL:", apiUrl);
 
     const response = await fetch(apiUrl);
@@ -35,6 +30,7 @@ async function fetchAllPosts(page, language = "kr") {
 
 function formatDate(dateString) {
     const date = new Date(dateString);
+
     return new Intl.DateTimeFormat("ko-KR", {
         year: "numeric",
         month: "long",
@@ -69,16 +65,16 @@ export default async function HomePage({ searchParams }) {
                         posts.map((post) => (
                             <div
                                 key={post.id}
-                                className="relative flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-none grid gap-2 item sm:grid-cols-2"
+                                className="relative flex-col bg-clip-border rounded-xl bg-f5f5f5 text-gray-700 shadow-none grid gap-2 item sm:grid-cols-2"
                             >
-                                <div className="relative bg-clip-border rounded-xl overflow-hidden bg-white text-gray-700 m-0 p-4">
+                                <div className="relative bg-clip-border rounded-xl overflow-hidden text-gray-700 m-0 p-4">
                                     <img
                                         src={
                                             post.thumbnail ||
                                             "https://placehold.co/600x400"
                                         }
                                         alt={`Thumbnail for ${post.title}`}
-                                        className="object-cover w-full h-full"
+                                        className="object-cover w-full h-full p-2"
                                     />
                                 </div>
                                 <div className="p-6 px-2 sm:pr-6 sm:pl-4">

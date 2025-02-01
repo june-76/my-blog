@@ -1,15 +1,12 @@
 // app/categories/[slug]/page.js
 
-import dotenv from "dotenv";
-
-dotenv.config();
-
 async function fetchCategoryPosts(category, page, language = "kr") {
     const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/categoryPosts?category=${category}&page=${page}&lang=${language}`;
     console.log("API URL:", apiUrl);
 
     const response = await fetch(apiUrl);
     const data = await response.json();
+
     return {
         posts: data.posts || [],
         currentPage: page,
@@ -19,6 +16,7 @@ async function fetchCategoryPosts(category, page, language = "kr") {
 
 function formatDate(dateString) {
     const date = new Date(dateString);
+
     return new Intl.DateTimeFormat("ko-KR", {
         year: "numeric",
         month: "long",
@@ -35,7 +33,7 @@ export default async function CategoryPage({ params, searchParams }) {
     const language = searchParams.lang || "kr";
 
     const { posts, currentPage, totalPages } = await fetchCategoryPosts(
-        slug, // category 키로 전달
+        slug, // category를 키로 전달
         page,
         language
     );
@@ -45,21 +43,27 @@ export default async function CategoryPage({ params, searchParams }) {
             <section className="grid p-8 place-items-center">
                 <div className="container grid grid-cols-1 gap-8 my-auto lg:grid-cols-2">
                     {posts.length === 0 ? (
-                        <div>이 카테고리에는 아직 작성된 글이 없습니다.</div>
+                        <div>
+                            {language === "kr"
+                                ? "이 카테고리에는 아직 작성된 글이 없습니다."
+                                : language === "jp"
+                                ? "このカテゴリーにはまだ投稿がありません。"
+                                : "No posts in this category."}
+                        </div>
                     ) : (
                         posts.map((post) => (
                             <div
                                 key={`page-${post.id}`}
-                                className="relative flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-none grid gap-2 item sm:grid-cols-2"
+                                className="relative flex-col bg-clip-border rounded-xl bg-f5f5f5 text-gray-700 shadow-none grid gap-2 item sm:grid-cols-2"
                             >
-                                <div className="relative bg-clip-border rounded-xl overflow-hidden bg-white text-gray-700 m-0 p-4">
+                                <div className="relative bg-clip-border rounded-xl overflow-hidden text-gray-700 m-0 p-4">
                                     <img
                                         src={
                                             post.thumbnail ||
                                             "https://placehold.co/600x400"
                                         }
                                         alt={`Thumbnail for ${post.title}`}
-                                        className="object-cover w-full h-full"
+                                        className="object-cover w-full h-full p-2"
                                     />
                                 </div>
                                 <div className="p-6 px-2 sm:pr-6 sm:pl-4">

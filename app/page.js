@@ -1,16 +1,20 @@
 // app/page.js
 
+"use client";
+
+import { useEffect, useState } from "react";
+
 async function fetchAllPosts(page, language = "kr") {
-    // const apiUrl = `http://localhost:3000/api/allPosts?page=${page}&lang=${language}`;
     const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/allPosts?page=${page}&lang=${language}`;
     console.log("API URL:", apiUrl);
 
-    const response = await fetch(apiUrl);
+    const response = await fetch(apiUrl, {
+        mode: "cors",
+    });
     const data = await response.json();
 
-    // console.log("allPosts API response data:", data);
+    // console.log("API response data:", data);
 
-    // data.posts가 배열인지 확인하고, 배열이 아니면 빈 배열로 초기화
     const postsArray = Array.isArray(data.posts) ? data.posts : data;
 
     // console.log("Posts array:", postsArray);
@@ -23,8 +27,8 @@ async function fetchAllPosts(page, language = "kr") {
 
     return {
         posts: filteredPosts,
-        currentPage: data.currentPage || page, // 실제 페이지 번호로 설정
-        totalPages: data.totalPages || 1, // 총 페이지 수는 실제 값으로 업데이트 필요
+        currentPage: data.currentPage || page,
+        totalPages: data.totalPages || 1,
     };
 }
 
@@ -41,26 +45,53 @@ function formatDate(dateString) {
     }).format(date);
 }
 
-// Next.js 14의 새로운 방식: 페이지 데이터 가져오는 방식
-export default async function HomePage({ searchParams }) {
-    const page = parseInt(searchParams.page || "1", 10); // 페이지 번호 파라미터
-    const language = searchParams.lang || "kr"; // 언어 파라미터를 searchParams에서 가져오거나 기본값으로 "kr" 설정
+export default function HomePage({ searchParams }) {
+    const [posts, setPosts] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const [loading, setLoading] = useState(true);
+    const page = parseInt(searchParams.page || "1", 10);
+    const language = searchParams.lang || "kr";
 
-    console.log("HomePage called with params:", { page, language });
+    useEffect(() => {
+        async function loadPosts() {
+            console.log("HomePage called with params:", { page, language });
+            try {
+                const { posts, currentPage, totalPages } = await fetchAllPosts(
+                    page,
+                    language
+                );
+                setPosts(posts);
+                setCurrentPage(currentPage);
+                setTotalPages(totalPages);
+            } catch (error) {
+                console.error("Error fetching posts:", error);
+            } finally {
+                setLoading(false);
+            }
+        }
+        loadPosts();
+    }, [page, language]);
 
-    const { posts, currentPage, totalPages } = await fetchAllPosts(
-        page,
-        language
-    );
+    if (loading) {
+        // 로딩 이미지를 첨부해주세요.
+        return <div></div>;
+    }
 
-    // console.log("HomePage fetched posts:", posts);
+    console.log("HomePage fetched posts:", posts);
 
     return (
         <>
             <section className="grid p-8 place-items-center">
                 <div className="container grid grid-cols-1 gap-8 my-auto lg:grid-cols-2">
                     {posts.length === 0 ? (
-                        <div>작성된 포스트가 없습니다.</div>
+                        <div>
+                            {language === "kr"
+                                ? "작성된 글이 없습니다."
+                                : language === "jp"
+                                ? "投稿がありません。"
+                                : "No posts in this category."}
+                        </div>
                     ) : (
                         posts.map((post) => (
                             <div

@@ -1,5 +1,8 @@
 // app/posts/[slug]/page.js
 
+"use client";
+
+import { useEffect, useState } from "react";
 import { unified } from "unified";
 import remarkParse from "remark-parse";
 import remarkHtml from "remark-html";
@@ -14,19 +17,29 @@ async function convertMarkdownToHtml(markdown) {
 }
 
 async function fetchPostData(postId, lang) {
+    console.log("Fetching post data for postId:", postId);
+
     const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/postContents?postId=${postId}&lang=${lang}`;
     console.log("API URL:", apiUrl);
 
-    const response = await fetch(apiUrl);
+    try {
+        const response = await fetch(apiUrl, {
+            mode: "cors",
+        });
 
-    if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        if (!response.ok) {
+            console.error(`HTTP error! status: ${response.status}`);
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        data.content = await convertMarkdownToHtml(data.content); // 마크다운을 HTML로 변환
+
+        return data;
+    } catch (error) {
+        console.error("Fetch error:", error);
+        throw error;
     }
-
-    const data = await response.json();
-    data.content = await convertMarkdownToHtml(data.content); // 마크다운을 HTML로 변환
-
-    return data;
 }
 
 function formatDate(dateString) {
@@ -42,15 +55,34 @@ function formatDate(dateString) {
     }).format(date);
 }
 
-export default async function PostPage({ params, searchParams }) {
+export default function PostPage({ params, searchParams }) {
     const { slug } = params;
     const lang = searchParams.lang || "kr";
-    let postData;
+    const [postData, setPostData] = useState(null);
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(true);
 
-    try {
-        postData = await fetchPostData(slug, lang);
-    } catch (error) {
-        return <div>오류 발생: {error.message}</div>;
+    useEffect(() => {
+        async function loadPostData() {
+            try {
+                const data = await fetchPostData(slug, lang);
+                setPostData(data);
+            } catch (error) {
+                setError(error.message);
+            } finally {
+                setLoading(false);
+            }
+        }
+        loadPostData();
+    }, [slug, lang]);
+
+    if (loading) {
+        // 로딩 이미지를 첨부해주세요.
+        return <div></div>;
+    }
+
+    if (error) {
+        return <div>오류 발생: {error}</div>;
     }
 
     if (!postData) {
@@ -79,7 +111,7 @@ export default async function PostPage({ params, searchParams }) {
                                     {title}
                                 </h1>
                                 <p className="leading-relaxed text-gray-500 mb-4 text-sm sm:text-base">
-                                    {formatDate(postData.date)}
+                                    {formatDate(date)}
                                 </p>
                                 <div
                                     className="text-gray-700 leading-relaxed"

@@ -1,15 +1,27 @@
 // app/categories/[slug]/page.js
 
-async function fetchCategoryPosts(category, page, language = "kr") {
-    const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/categoryPosts?category=${category}&page=${page}&lang=${language}`;
+"use client";
+
+import { useEffect, useState } from "react";
+
+async function fetchCategoryPosts(page, language = "kr", category) {
+    const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/categoryPosts?page=${page}&lang=${language}&category=${category}`;
     console.log("API URL:", apiUrl);
 
-    const response = await fetch(apiUrl);
+    const response = await fetch(apiUrl, {
+        mode: "cors",
+    });
     const data = await response.json();
 
+    const postsArray = Array.isArray(data.posts) ? data.posts : data;
+
+    const filteredPosts = postsArray.filter(
+        (post) => post.language === language || !post.language
+    );
+
     return {
-        posts: data.posts || [],
-        currentPage: page,
+        posts: filteredPosts,
+        currentPage: data.currentPage || page,
         totalPages: data.totalPages || 1,
     };
 }
@@ -27,16 +39,41 @@ function formatDate(dateString) {
     }).format(date);
 }
 
-export default async function CategoryPage({ params, searchParams }) {
-    const { slug } = params;
+export default function CategoryPage({ searchParams, params }) {
+    const [posts, setPosts] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const [loading, setLoading] = useState(true);
     const page = parseInt(searchParams.page || "1", 10);
     const language = searchParams.lang || "kr";
+    const category = params.slug;
 
-    const { posts, currentPage, totalPages } = await fetchCategoryPosts(
-        slug, // category를 키로 전달
-        page,
-        language
-    );
+    useEffect(() => {
+        async function loadPosts() {
+            console.log("CategoryPage called with params:", {
+                page,
+                language,
+                category,
+            });
+            try {
+                const { posts, currentPage, totalPages } =
+                    await fetchCategoryPosts(page, language, category);
+                setPosts(posts);
+                setCurrentPage(currentPage);
+                setTotalPages(totalPages);
+            } catch (error) {
+                console.error("Error fetching category posts:", error);
+            } finally {
+                setLoading(false);
+            }
+        }
+        loadPosts();
+    }, [page, language, category]);
+
+    if (loading) {
+        // 로딩 이미지를 첨부해주세요.
+        return <div></div>;
+    }
 
     return (
         <>
@@ -45,15 +82,15 @@ export default async function CategoryPage({ params, searchParams }) {
                     {posts.length === 0 ? (
                         <div>
                             {language === "kr"
-                                ? "이 카테고리에는 아직 작성된 글이 없습니다."
+                                ? "작성된 글이 없습니다."
                                 : language === "jp"
-                                ? "このカテゴリーにはまだ投稿がありません。"
-                                : "No posts in this category."}
+                                ? "投稿がありません。"
+                                : "No posts in thie category."}
                         </div>
                     ) : (
                         posts.map((post) => (
                             <div
-                                key={`page-${post.id}`}
+                                key={post.id}
                                 className="relative flex-col bg-clip-border rounded-xl bg-f5f5f5 text-gray-700 shadow-none grid gap-2 item sm:grid-cols-2"
                             >
                                 <div className="relative bg-clip-border rounded-xl overflow-hidden text-gray-700 m-0 p-4">
@@ -93,7 +130,7 @@ export default async function CategoryPage({ params, searchParams }) {
             <div className="pagination">
                 {currentPage > 1 && (
                     <a
-                        href={`/categories/${slug}?page=${
+                        href={`/categories/${category}?page=${
                             currentPage - 1
                         }&lang=${language}`}
                         className="prev-page"
@@ -105,7 +142,7 @@ export default async function CategoryPage({ params, searchParams }) {
                 {[...Array(totalPages)].map((_, index) => (
                     <a
                         key={index}
-                        href={`/categories/${slug}?page=${
+                        href={`/categories/${category}?page=${
                             index + 1
                         }&lang=${language}`}
                         className={`page-button ${
@@ -118,7 +155,7 @@ export default async function CategoryPage({ params, searchParams }) {
 
                 {currentPage < totalPages && (
                     <a
-                        href={`/categories/${slug}?page=${
+                        href={`/categories/${category}?page=${
                             currentPage + 1
                         }&lang=${language}`}
                         className="next-page"

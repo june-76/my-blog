@@ -1,5 +1,3 @@
-// app/posts/[slug]/page.js
-
 "use client";
 
 import { useEffect, useState } from "react";
@@ -20,7 +18,9 @@ async function fetchPostData(postId, lang) {
     console.log("Fetching post data for postId:", postId);
 
     const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/postContents?postId=${postId}&lang=${lang}`;
-    console.log("API URL:", apiUrl);
+    if (process.env.NODE_ENV === "development") {
+        console.log("API URL:", apiUrl);
+    }
 
     try {
         const response = await fetch(apiUrl, {
@@ -28,12 +28,11 @@ async function fetchPostData(postId, lang) {
         });
 
         if (!response.ok) {
-            console.error(`HTTP error! status: ${response.status}`);
             throw new Error(`HTTP error! status: ${response.status}`);
         }
 
         const data = await response.json();
-        data.content = await convertMarkdownToHtml(data.content); // 마크다운을 HTML로 변환
+        data.content = await convertMarkdownToHtml(data.content);
 
         return data;
     } catch (error) {
@@ -77,8 +76,7 @@ export default function PostPage({ params, searchParams }) {
     }, [slug, lang]);
 
     if (loading) {
-        // 로딩 이미지를 첨부해주세요.
-        return <div></div>;
+        return <div className="grid p-20 place-items-center">Loading...</div>;
     }
 
     if (error) {
@@ -86,7 +84,15 @@ export default function PostPage({ params, searchParams }) {
     }
 
     if (!postData) {
-        return <div>포스트를 찾을 수 없습니다.</div>;
+        return (
+            <div>
+                {language === "kr"
+                    ? "포스트를 찾을 수 없습니다."
+                    : language === "jp"
+                    ? "投稿がありません。"
+                    : "Post not found."}
+            </div>
+        );
     }
 
     const {

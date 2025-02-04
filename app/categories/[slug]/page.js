@@ -10,7 +10,9 @@ async function fetchCategoryPosts(page, language = "kr", category) {
     }
 
     const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/categoryPosts?page=${page}&lang=${language}&category=${category}`;
-    console.log("API URL:", apiUrl);
+    if (process.env.NODE_ENV === "development") {
+        console.log("API URL:", apiUrl);
+    }
 
     const response = await fetch(apiUrl, {
         mode: "cors",
@@ -54,11 +56,6 @@ export default function CategoryPage({ searchParams, params }) {
 
     useEffect(() => {
         async function loadPosts() {
-            console.log("CategoryPage called with params:", {
-                page,
-                language,
-                category,
-            });
             try {
                 const { posts, currentPage, totalPages } =
                     await fetchCategoryPosts(page, language, category);
@@ -75,8 +72,7 @@ export default function CategoryPage({ searchParams, params }) {
     }, [page, language, category]);
 
     if (loading) {
-        // 로딩 이미지를 첨부해주세요.
-        return <div></div>;
+        return <div className="grid p-20 place-items-center">Loading...</div>;
     }
 
     return (

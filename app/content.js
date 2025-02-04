@@ -11,11 +11,9 @@ async function fetchAllPosts(page, language = "kr") {
     }
 
     let apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/allPosts?page=${page}&lang=${language}`;
-    console.log("API URL:", apiUrl);
-
-    // if (process.env.NODE_ENV === "development") {
-    //     apiUrl = apiUrl.replace("https://", "http://");
-    // }
+    if (process.env.NODE_ENV === "development") {
+        console.log("API URL:", apiUrl);
+    }
 
     try {
         const response = await fetch(apiUrl, { mode: "cors" });
@@ -51,7 +49,9 @@ export default function PageContent() {
     const pageParam = parseInt(searchParams.get("page"), 10) || 1;
     const langParam = searchParams.get("lang") || "kr";
 
-    console.log(`pageParam: ${pageParam}, langParam: ${langParam}`);
+    if (process.env.NODE_ENV === "development") {
+        console.log(`pageParam: ${pageParam}, langParam: ${langParam}`);
+    }
 
     const [posts, setPosts] = useState([]);
     const [currentPage, setCurrentPage] = useState(pageParam);
@@ -60,8 +60,6 @@ export default function PageContent() {
     const [language, setLanguage] = useState(langParam);
 
     useEffect(() => {
-        console.log("Fetching posts...");
-
         async function loadPosts() {
             try {
                 setLoading(true);

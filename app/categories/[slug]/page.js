@@ -1,10 +1,14 @@
-// app/categories/[slug]/page.js
-
 "use client";
 
 import { useEffect, useState } from "react";
 
 async function fetchCategoryPosts(page, language = "kr", category) {
+    if (!process.env.NEXT_PUBLIC_API_BASE_URL) {
+        throw new Error(
+            "Environment variable NEXT_PUBLIC_API_BASE_URL is not defined."
+        );
+    }
+
     const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/categoryPosts?page=${page}&lang=${language}&category=${category}`;
     console.log("API URL:", apiUrl);
 

@@ -11,11 +11,11 @@ async function fetchAllPosts(page, language = "kr") {
     }
 
     let apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/allPosts?page=${page}&lang=${language}`;
-    console.log("apiUrl:", apiUrl);
+    console.log("API URL:", apiUrl);
 
-    if (process.env.NODE_ENV === "development") {
-        apiUrl = apiUrl.replace("https://", "http://");
-    }
+    // if (process.env.NODE_ENV === "development") {
+    //     apiUrl = apiUrl.replace("https://", "http://");
+    // }
 
     try {
         const response = await fetch(apiUrl, { mode: "cors" });

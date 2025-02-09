@@ -17,11 +17,15 @@ async function fetchAllPosts(page, language = "kr") {
 
     try {
         const response = await fetch(apiUrl, { mode: "cors" });
-
         if (!response.ok) {
             throw new Error(`error: ${response.status}`);
         }
+
         const data = await response.json();
+        if (process.env.NODE_ENV === "development") {
+            console.log("data:", data);
+        }
+
         return {
             posts: Array.isArray(data.posts) ? data.posts : data,
             currentPage: data.currentPage || page,
@@ -98,33 +102,38 @@ export default function PageContent() {
                         posts.map((post) => (
                             <div
                                 key={post.id}
-                                className="relative flex-col bg-clip-border rounded-xl bg-f5f5f5 text-gray-700 shadow-none grid gap-2 sm:grid-cols-2"
+                                className="relative flex-col bg-clip-border rounded-l bg-f5f5f5 text-gray-700 shadow-none grid gap-2 sm:grid-cols-2"
                             >
-                                <div className="relative bg-clip-border rounded-xl overflow-hidden text-gray-700 m-0 p-4">
-                                    <img
-                                        src={
-                                            post.thumbnail ||
-                                            "https://placehold.co/600x400"
-                                        }
-                                        alt={`Thumbnail for ${post.title}`}
-                                        className="object-cover w-full h-full p-2"
-                                    />
+                                <div className="relative bg-clip-border rounded-l overflow-hidden text-gray-700 m-4 p-1">
+                                    <a
+                                        href={`/posts/${post.id}?lang=${language}`}
+                                        className="block w-full h-full"
+                                    >
+                                        <img
+                                            src={
+                                                post.thumbnail ||
+                                                "https://placehold.co/600x400"
+                                            }
+                                            alt={`Thumbnail for ${post.title}`}
+                                            className="object-cover w-full h-full"
+                                        />
+                                    </a>
                                 </div>
                                 <div className="p-6 px-2 sm:pr-6 sm:pl-4">
-                                    <p className="block antialiased text-sm font-light leading-normal text-inherit mb-4 font-semibold">
+                                    <p className="block antialiased text-sm font-light leading-normal text-gray-500 mb-1 font-semibold">
                                         {post.category}
                                     </p>
                                     <a
                                         href={`/posts/${post.id}?lang=${language}`}
-                                        className="block antialiased tracking-normal text-xl font-semibold leading-snug text-blue-gray-900 mb-2 normal-case transition-colors hover:text-gray-700"
+                                        className="block antialiased tracking-normal text-xl font-bold leading-snug text-blue-gray-900 mb-2 normal-case transition-colors hover:text-gray-700"
                                     >
                                         {post.title}
                                     </a>
-                                    <p className="block antialiased text-base leading-relaxed text-inherit mb-8 font-normal text-gray-500">
-                                        {post.description}
-                                    </p>
-                                    <p className="block antialiased text-sm leading-normal text-gray-700 font-normal">
+                                    <p className="block antialiased text-sm leading-normal text-gray-700 mb-8 font-normal">
                                         {formatDate(post.date)}
+                                    </p>
+                                    <p className="block antialiased text-base leading-relaxed text-gray-500 font-normal text-gray-500">
+                                        {post.description}
                                     </p>
                                 </div>
                             </div>
@@ -133,37 +142,25 @@ export default function PageContent() {
                 </div>
             </section>
 
-            <div className="pagination flex justify-center mt-6">
-                {currentPage > 1 && (
-                    <a
-                        href={`/?lang=${language}&page=${currentPage - 1}`}
-                        className="px-4 py-2 border rounded-lg mx-1"
-                    >
-                        이전
-                    </a>
-                )}
-                {[...Array(totalPages)].map((_, index) => (
-                    <a
-                        key={`page-${index}`}
-                        href={`/?lang=${language}&page=${index + 1}`}
-                        className={`px-4 py-2 border rounded-lg mx-1 ${
-                            currentPage === index + 1
-                                ? "bg-blue-500 text-white"
-                                : ""
-                        }`}
-                    >
-                        {index + 1}
-                    </a>
-                ))}
-                {currentPage < totalPages && (
-                    <a
-                        href={`/?lang=${language}&page=${currentPage + 1}`}
-                        className="px-4 py-2 border rounded-lg mx-1"
-                    >
-                        다음
-                    </a>
-                )}
-            </div>
+            {posts.length > 0 && (
+                <div className="pagination">
+                    {[...Array(totalPages)].map((_, index) => {
+                        return (
+                            <a
+                                key={`page-${index}`}
+                                href={`/?lang=${language}&page=${index + 1}`}
+                                className={`page-button ${
+                                    Number(currentPage) === index + 1
+                                        ? "active"
+                                        : ""
+                                }`}
+                            >
+                                {index + 1}
+                            </a>
+                        );
+                    })}
+                </div>
+            )}
         </>
     );
 }

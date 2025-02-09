@@ -1,5 +1,3 @@
-// app/api/postContents/route.js
-
 import { fetchData } from "../../utils/api";
 
 export async function GET(req) {

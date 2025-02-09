@@ -17,11 +17,15 @@ async function fetchAllPosts(page, language = "kr") {
 
     try {
         const response = await fetch(apiUrl, { mode: "cors" });
-
         if (!response.ok) {
             throw new Error(`error: ${response.status}`);
         }
+
         const data = await response.json();
+        if (process.env.NODE_ENV === "development") {
+            console.log("data:", data);
+        }
+
         return {
             posts: Array.isArray(data.posts) ? data.posts : data,
             currentPage: data.currentPage || page,
@@ -132,37 +136,22 @@ export default function PageContent() {
                     )}
                 </div>
             </section>
-
-            <div className="pagination flex justify-center mt-6">
-                {currentPage > 1 && (
-                    <a
-                        href={`/?lang=${language}&page=${currentPage - 1}`}
-                        className="px-4 py-2 border rounded-lg mx-1"
-                    >
-                        이전
-                    </a>
-                )}
-                {[...Array(totalPages)].map((_, index) => (
-                    <a
-                        key={`page-${index}`}
-                        href={`/?lang=${language}&page=${index + 1}`}
-                        className={`px-4 py-2 border rounded-lg mx-1 ${
-                            currentPage === index + 1
-                                ? "bg-blue-500 text-white"
-                                : ""
-                        }`}
-                    >
-                        {index + 1}
-                    </a>
-                ))}
-                {currentPage < totalPages && (
-                    <a
-                        href={`/?lang=${language}&page=${currentPage + 1}`}
-                        className="px-4 py-2 border rounded-lg mx-1"
-                    >
-                        다음
-                    </a>
-                )}
+            <div className="pagination">
+                {[...Array(totalPages)].map((_, index) => {
+                    return (
+                        <a
+                            key={`page-${index}`}
+                            href={`/?lang=${language}&page=${index + 1}`}
+                            className={`page-button ${
+                                Number(currentPage) === index + 1
+                                    ? "active"
+                                    : ""
+                            }`}
+                        >
+                            {index + 1}
+                        </a>
+                    );
+                })}
             </div>
         </>
     );

@@ -1,9 +1,3 @@
-// app/about/page.js
-
-// Next.js의 파일 기반 라우팅 기능에 의해, about 폴더는 /about 경로를 생성합니다.
-// junefromjuly.blog/about 접근 시 about 폴더의 page.js 파일이 렌더링됩니다. (SSR)
-// 폴더 내의 page.js 파일은 해당 경로의 기본 페이지를 담당합니다. (라우트의 엔트리 포인트)
-
 import Image from "next/image";
 
 export default function AboutPage({ searchParams }) {
@@ -14,14 +8,16 @@ export default function AboutPage({ searchParams }) {
             title: "지금은 공사중!",
             description1:
                 "지난 기간 notion, velog, 지면 등에 기록한 내용들을 모아 정리하고 있습니다. 아이디어를 구현하거나, 문제를 발견하고 해결하는 것에 관심이 있습니다. 주로 Java, Javascript를 활용합니다.",
-            description2: "해당 블로그는 next.js를 사용하여 제작되었습니다.",
+            description2:
+                "이 블로그는 Next.js, AWS, Vercel으로 제작되었습니다.",
             role: "Software Engineer",
         },
         jp: {
             title: "工事中です！",
             description1:
                 "これまでのnotion、velog、紙面などに記録した内容を集めて整理しています。アイデアを実現したり、問題を発見して解決することに興味があります。主にJavaとJavaScriptを活用しています。",
-            description2: "このブログはNext.jsを使って作成されました。",
+            description2:
+                "このブログは Next.js、AWS、Vercelを使って作成されました。",
             role: "Software Engineer",
         },
     };

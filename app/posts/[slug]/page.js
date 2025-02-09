@@ -110,22 +110,22 @@ export default function PostPage({ params, searchParams }) {
                     <div className="w-full p-4 mx-auto">
                         <div className="h-full rounded-xl bg-white overflow-hidden shadow-md">
                             <div className="p-8">
-                                <h2 className="tracking-widest text-xs title-font font-medium text-gray-400 mb-1">
-                                    {postCategory || "카테고리 없음"}
+                                <h2 className="tracking-widest text-s title-font font-medium text-gray-400 mb-1">
+                                    {postCategory}
                                 </h2>
-                                <h1 className="title-font text-xl sm:text-2xl font-medium text-gray-600 mb-4">
+                                <h1 className="title-font text-xl sm:text-2xl font-bold text-gray-600 mb-2">
                                     {title}
                                 </h1>
-                                <p className="leading-relaxed text-gray-500 mb-4 text-sm sm:text-base">
+                                <p className="leading-relaxed text-gray-500 mb-10 text-sm sm:text-base">
                                     {formatDate(date)}
                                 </p>
                                 <div
-                                    className="text-gray-700 leading-relaxed"
+                                    className="leading-relaxed ext-gray-700"
                                     dangerouslySetInnerHTML={{
                                         __html: content,
                                     }}
                                 ></div>
-                                <p className="text-gray-400 mt-4">
+                                <p className="text-gray-400 mt-8">
                                     {description}
                                 </p>
                             </div>

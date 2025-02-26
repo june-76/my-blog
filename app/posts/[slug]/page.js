@@ -41,17 +41,38 @@ async function fetchPostData(postId, lang) {
     }
 }
 
-function formatDate(dateString) {
-    const date = new Date(dateString);
+// 댓글 API를 호출하는 함수 추가
+async function fetchComments(postId) {
+    const commentsApiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/comments?postId=${postId}`;
 
-    return new Intl.DateTimeFormat("ko-KR", {
+    try {
+        const response = await fetch(commentsApiUrl, {
+            mode: "cors",
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const comments = await response.json();
+        console.log("Fetched comments:", comments);
+        return comments;
+    } catch (error) {
+        console.error("Comments Fetch error:", error);
+    }
+}
+
+function formatDate(dateString, lang) {
+    const locale = lang === "jp" ? "ja-JP" : "ko-KR";
+
+    return new Intl.DateTimeFormat(locale, {
         year: "numeric",
         month: "long",
         day: "numeric",
         hour: "2-digit",
         minute: "2-digit",
         hour12: false,
-    }).format(date);
+    }).format(new Date(dateString));
 }
 
 export default function PostPage({ params, searchParams }) {
@@ -66,6 +87,10 @@ export default function PostPage({ params, searchParams }) {
             try {
                 const data = await fetchPostData(slug, lang);
                 setPostData(data);
+
+                // 댓글을 가져오는 API 호출 추가 (렌더링은 하지 않고 콘솔에만 찍기)
+                const comments = await fetchComments(slug);
+                console.log("Comments:", comments); // 댓글을 콘솔에만 출력
             } catch (error) {
                 setError(error.message);
             } finally {
@@ -86,9 +111,9 @@ export default function PostPage({ params, searchParams }) {
     if (!postData) {
         return (
             <div>
-                {language === "kr"
+                {lang === "kr"
                     ? "포스트를 찾을 수 없습니다."
-                    : language === "jp"
+                    : lang === "jp"
                     ? "投稿がありません。"
                     : "Post not found."}
             </div>
@@ -117,7 +142,7 @@ export default function PostPage({ params, searchParams }) {
                                     {title}
                                 </h1>
                                 <p className="leading-relaxed text-gray-500 mb-10 text-sm sm:text-base">
-                                    {formatDate(date)}
+                                    {formatDate(date, lang)}
                                 </p>
                                 <div
                                     className="leading-relaxed ext-gray-700"

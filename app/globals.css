@@ -180,6 +180,10 @@ ul {
     color: #fade27;
 }
 
+.hover-highlight-bg:hover {
+    background-color: #fade27;
+}
+
 /* highlighting */
 .bg-f5f5f5 {
     background-color: #f5f5f5;

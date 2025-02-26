@@ -37,8 +37,10 @@ async function fetchAllPosts(page, language = "kr") {
     }
 }
 
-function formatDate(dateString) {
-    return new Intl.DateTimeFormat("ko-KR", {
+function formatDate(dateString, lang) {
+    const locale = lang === "jp" ? "ja-JP" : "ko-KR";
+
+    return new Intl.DateTimeFormat(locale, {
         year: "numeric",
         month: "long",
         day: "numeric",
@@ -130,7 +132,7 @@ export default function PageContent() {
                                         {post.title}
                                     </a>
                                     <p className="block antialiased text-sm leading-normal text-gray-700 mb-8 font-normal">
-                                        {formatDate(post.date)}
+                                        {formatDate(post.date, language)}
                                     </p>
                                     <p className="block antialiased text-base leading-relaxed text-gray-500 font-normal text-gray-500">
                                         {post.description}

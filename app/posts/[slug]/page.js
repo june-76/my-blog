@@ -5,6 +5,62 @@ import { unified } from "unified";
 import remarkParse from "remark-parse";
 import remarkHtml from "remark-html";
 
+// 임시 JSON 댓글 데이터
+const mockComments = [
+    {
+        id: 1,
+        post_id: 1,
+        name: "홍길동",
+        content: "첫 번째 댓글이에요!",
+        is_admin: false,
+        created_at: "2025-02-27 10:00:00",
+        parent_comment_id: null,
+        replies: [
+            {
+                id: 2,
+                post_id: 1,
+                name: "김철수",
+                content: "첫 번째 댓글에 대한 대댓글",
+                is_admin: false,
+                created_at: "2025-02-27 10:05:00",
+                parent_comment_id: 1,
+                replies: [],
+            },
+            {
+                id: 3,
+                post_id: 1,
+                name: "이영희",
+                content: "또 다른 대댓글이에요",
+                is_admin: false,
+                created_at: "2025-02-27 10:10:00",
+                parent_comment_id: 1,
+                replies: [
+                    {
+                        id: 4,
+                        post_id: 1,
+                        name: "최지우",
+                        content: "대댓글에 대한 대댓글!",
+                        is_admin: true,
+                        created_at: "2025-02-27 10:20:00",
+                        parent_comment_id: 3,
+                        replies: [],
+                    },
+                ],
+            },
+        ],
+    },
+    {
+        id: 5,
+        post_id: 1,
+        name: "박수정",
+        content: "두 번째 댓글이에요!",
+        is_admin: true,
+        created_at: "2025-02-27 11:00:00",
+        parent_comment_id: null,
+        replies: [],
+    },
+];
+
 async function convertMarkdownToHtml(markdown) {
     const processedContent = await unified()
         .use(remarkParse)
@@ -15,25 +71,14 @@ async function convertMarkdownToHtml(markdown) {
 }
 
 async function fetchPostData(postId, lang) {
-    console.log("Fetching post data for postId:", postId);
-
     const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/postContents?postId=${postId}&lang=${lang}`;
-    if (process.env.NODE_ENV === "development") {
-        console.log("API URL:", apiUrl);
-    }
-
     try {
-        const response = await fetch(apiUrl, {
-            mode: "cors",
-        });
-
+        const response = await fetch(apiUrl, { mode: "cors" });
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-
         const data = await response.json();
         data.content = await convertMarkdownToHtml(data.content);
-
         return data;
     } catch (error) {
         console.error("Fetch error:", error);
@@ -41,30 +86,8 @@ async function fetchPostData(postId, lang) {
     }
 }
 
-// 댓글 API를 호출하는 함수 추가
-async function fetchComments(postId) {
-    const commentsApiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/comments?postId=${postId}`;
-
-    try {
-        const response = await fetch(commentsApiUrl, {
-            mode: "cors",
-        });
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const comments = await response.json();
-        console.log("Fetched comments:", comments);
-        return comments;
-    } catch (error) {
-        console.error("Comments Fetch error:", error);
-    }
-}
-
 function formatDate(dateString, lang) {
     const locale = lang === "jp" ? "ja-JP" : "ko-KR";
-
     return new Intl.DateTimeFormat(locale, {
         year: "numeric",
         month: "long",
@@ -75,22 +98,37 @@ function formatDate(dateString, lang) {
     }).format(new Date(dateString));
 }
 
+function renderComment(comment, level = 0) {
+    return (
+        <div
+            key={comment.id}
+            style={{ marginLeft: `${level * 20}px`, marginBottom: "12px" }}
+        >
+            <div>
+                <strong>{comment.is_admin ? "운영자" : comment.name}</strong>{" "}
+                <small>{formatDate(comment.created_at, "kr")}</small>
+            </div>
+            <p className="text-gray-700">{comment.content}</p>
+            {comment.replies &&
+                comment.replies.length > 0 &&
+                comment.replies.map((reply) => renderComment(reply, level + 1))}
+        </div>
+    );
+}
+
 export default function PostPage({ params, searchParams }) {
     const { slug } = params;
     const lang = searchParams.lang || "kr";
     const [postData, setPostData] = useState(null);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [comments, setComments] = useState(mockComments); // 임시 댓글 데이터 상태 추가
 
     useEffect(() => {
         async function loadPostData() {
             try {
                 const data = await fetchPostData(slug, lang);
                 setPostData(data);
-
-                // 댓글을 가져오는 API 호출 추가 (렌더링은 하지 않고 콘솔에만 찍기)
-                const comments = await fetchComments(slug);
-                console.log("Comments:", comments); // 댓글을 콘솔에만 출력
             } catch (error) {
                 setError(error.message);
             } finally {
@@ -155,6 +193,11 @@ export default function PostPage({ params, searchParams }) {
                                 </p>
                             </div>
                         </div>
+                    </div>
+                </div>
+                <div className="h-full rounded-xl bg-white overflow-hidden shadow-md mt-10 p-8">
+                    <div className="comments-section">
+                        {comments.map((comment) => renderComment(comment))}
                     </div>
                 </div>
             </div>

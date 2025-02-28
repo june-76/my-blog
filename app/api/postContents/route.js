@@ -15,12 +15,19 @@ export async function GET(req) {
     }
 
     try {
-        const data = await fetchData("postContents", { postId, lang });
+        const postData = await fetchData("postContents", { postId, lang });
+        const commentsData = await fetchData("comments", { postId }); // 댓글 데이터 추가 호출
 
-        return new Response(JSON.stringify(data), {
-            status: 200,
-            headers: { "Content-Type": "application/json" },
-        });
+        return new Response(
+            JSON.stringify({
+                postData,
+                comments: commentsData, // 댓글 데이터를 함께 반환
+            }),
+            {
+                status: 200,
+                headers: { "Content-Type": "application/json" },
+            }
+        );
     } catch (error) {
         return new Response(
             JSON.stringify({

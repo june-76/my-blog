@@ -1,117 +1,76 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { unified } from "unified";
-import remarkParse from "remark-parse";
-import remarkHtml from "remark-html";
 
-// 임시 JSON 댓글 데이터
-const mockComments = [
-    {
-        id: 1,
-        post_id: 1,
-        name: "홍길동",
-        content: "첫 번째 댓글이에요!",
-        is_admin: false,
-        created_at: "2025-02-27 10:00:00",
-        parent_comment_id: null,
-        replies: [
-            {
-                id: 2,
-                post_id: 1,
-                name: "김철수",
-                content: "첫 번째 댓글에 대한 대댓글",
-                is_admin: false,
-                created_at: "2025-02-27 10:05:00",
-                parent_comment_id: 1,
-                replies: [],
-            },
-            {
-                id: 3,
-                post_id: 1,
-                name: "이영희",
-                content: "또 다른 대댓글이에요",
-                is_admin: false,
-                created_at: "2025-02-27 10:10:00",
-                parent_comment_id: 1,
-                replies: [
-                    {
-                        id: 4,
-                        post_id: 1,
-                        name: "최지우",
-                        content: "대댓글에 대한 대댓글!",
-                        is_admin: true,
-                        created_at: "2025-02-27 10:20:00",
-                        parent_comment_id: 3,
-                        replies: [],
-                    },
-                ],
-            },
-        ],
-    },
-    {
-        id: 5,
-        post_id: 1,
-        name: "박수정",
-        content: "두 번째 댓글이에요!",
-        is_admin: true,
-        created_at: "2025-02-27 11:00:00",
-        parent_comment_id: null,
-        replies: [],
-    },
-];
-
-async function convertMarkdownToHtml(markdown) {
-    const processedContent = await unified()
-        .use(remarkParse)
-        .use(remarkHtml)
-        .process(markdown);
-
-    return processedContent.toString().trim();
-}
-
-async function fetchPostData(postId, lang) {
-    const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/postContents?postId=${postId}&lang=${lang}`;
+// 포스트 데이터를 가져오는 함수 정의
+async function fetchPostData(slug, lang) {
+    const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/postContents?postId=${slug}&lang=${lang}`;
     try {
         const response = await fetch(apiUrl, { mode: "cors" });
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        const data = await response.json();
-        data.content = await convertMarkdownToHtml(data.content);
-        return data;
+        return await response.json();
     } catch (error) {
         console.error("Fetch error:", error);
         throw error;
     }
 }
 
-function formatDate(dateString, lang) {
-    const locale = lang === "jp" ? "ja-JP" : "ko-KR";
-    return new Intl.DateTimeFormat(locale, {
+// 댓글 API 호출 함수
+async function fetchComments(postId) {
+    const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/comments?postId=${postId}`;
+    try {
+        const response = await fetch(apiUrl, { mode: "cors" });
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error("Fetch error:", error);
+        throw error;
+    }
+}
+
+// 날짜 포맷 함수 정의
+function formatDate(date, lang) {
+    const options = {
         year: "numeric",
         month: "long",
         day: "numeric",
         hour: "2-digit",
         minute: "2-digit",
-        hour12: false,
-    }).format(new Date(dateString));
+        second: "2-digit",
+        hour12: false, // 24시간 형식 유지
+    };
+
+    return new Date(date).toLocaleDateString(lang, options);
 }
 
-function renderComment(comment, level = 0) {
+// 댓글 렌더링 함수
+function renderComment(comment) {
+    // depth 값에 따라 왼쪽 여백을 조정
+    const commentStyle = {
+        paddingLeft: `${comment.depth * 2}rem`, // depth가 1이면 2rem, 2이면 4rem, 3이면 6rem...
+    };
+
     return (
         <div
             key={comment.id}
-            style={{ marginLeft: `${level * 20}px`, marginBottom: "12px" }}
+            className="comment p-3 border-t border-gray-200"
+            style={commentStyle}
         >
-            <div>
-                <strong>{comment.is_admin ? "운영자" : comment.name}</strong>{" "}
-                <small>{formatDate(comment.created_at, "kr")}</small>
+            <div className="flex justify-between items-center">
+                <p className="font-semibold text-gray-700">{comment.name}</p>
+                <p className="text-gray-500 text-sm">
+                    {formatDate(comment.created_at, "kr")}
+                </p>
             </div>
-            <p className="text-gray-700">{comment.content}</p>
-            {comment.replies &&
-                comment.replies.length > 0 &&
-                comment.replies.map((reply) => renderComment(reply, level + 1))}
+            <p className="text-gray-600 mt-1">{comment.content}</p>
+            {/* 대댓글이 있을 경우 재귀적으로 자식 댓글을 렌더링 */}
+            {comment && comment.length > 0 && (
+                <div>{comment.map((reply) => renderComment(reply))}</div>
+            )}
         </div>
     );
 }
@@ -122,13 +81,18 @@ export default function PostPage({ params, searchParams }) {
     const [postData, setPostData] = useState(null);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [comments, setComments] = useState(mockComments); // 임시 댓글 데이터 상태 추가
+    const [comments, setComments] = useState([]); // 댓글 상태
 
     useEffect(() => {
         async function loadPostData() {
             try {
-                const data = await fetchPostData(slug, lang);
-                setPostData(data);
+                // 포스트 데이터와 댓글을 동시에 가져오기
+                const postData = await fetchPostData(slug, lang);
+                setPostData(postData);
+
+                // 댓글 데이터 가져오기
+                const fetchedComments = await fetchComments(slug); // 슬러그를 postId로 사용
+                setComments(fetchedComments);
             } catch (error) {
                 setError(error.message);
             } finally {
@@ -183,7 +147,7 @@ export default function PostPage({ params, searchParams }) {
                                     {formatDate(date, lang)}
                                 </p>
                                 <div
-                                    className="leading-relaxed ext-gray-700"
+                                    className="leading-relaxed text-gray-700"
                                     dangerouslySetInnerHTML={{
                                         __html: content,
                                     }}
@@ -195,7 +159,37 @@ export default function PostPage({ params, searchParams }) {
                         </div>
                     </div>
                 </div>
-                <div className="h-full rounded-xl bg-white overflow-hidden shadow-md mt-10 p-8">
+                <div className="h-full rounded-xl bg-white overflow-hidden shadow-md mt-10 p-6">
+                    {/* 댓글 입력 폼 */}
+                    <div className="mb-6 rounded-lg mt-2">
+                        {/* 이름 & 비밀번호 가로 배치 */}
+                        <div className="flex gap-2 mb-2">
+                            <input
+                                type="text"
+                                placeholder="작성자"
+                                className="w-1/2 p-2 border rounded-md"
+                                maxLength={20}
+                            />
+                            <input
+                                type="password"
+                                placeholder="비밀번호(6자 이상)"
+                                className="w-1/2 p-2 border rounded-md"
+                            />
+                        </div>
+
+                        {/* 댓글 입력란 & 작성 버튼 가로 배치 */}
+                        <div className="flex gap-2">
+                            <textarea
+                                placeholder="내용을 입력하세요."
+                                className="w-4/5 p-2 border rounded-md h-20 resize-none"
+                            />
+                            <button className="w-1/5 bg-gray-400 text-white py-2 rounded-md hover-highlight-bg hover:text-gray-600">
+                                작성
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* 댓글 목록 */}
                     <div className="comments-section">
                         {comments.map((comment) => renderComment(comment))}
                     </div>

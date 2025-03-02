@@ -134,7 +134,7 @@ export default function PostPage({ params, searchParams }) {
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
     const [comments, setComments] = useState([]);
-    const [name, setName] = useState("작성자"); // 작성자 상태
+    const [name, setName] = useState(lang === "kr" ? "작성자" : "作成者"); // 작성자 상태
     const [password, setPassword] = useState(""); // 비밀번호 상태
     const [content, setContent] = useState(""); // 댓글 내용 상태
     const [submitDisabled, setSubmitDisabled] = useState(true); // 버튼 비활성화 상태
@@ -188,7 +188,7 @@ export default function PostPage({ params, searchParams }) {
     }
 
     if (error) {
-        return <div>오류 발생: {error}</div>;
+        return <div>Error: {error}</div>;
     }
 
     if (!postData) {
@@ -246,7 +246,9 @@ export default function PostPage({ params, searchParams }) {
                         <div className="flex gap-2 mb-2">
                             <input
                                 type="text"
-                                placeholder="작성자"
+                                placeholder={
+                                    lang === "kr" ? "작성자" : "作成者"
+                                }
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
                                 className="w-1/2 p-2 border rounded-md"
@@ -254,7 +256,11 @@ export default function PostPage({ params, searchParams }) {
                             />
                             <input
                                 type="password"
-                                placeholder="비밀번호(6자 이상)"
+                                placeholder={
+                                    lang === "kr"
+                                        ? "비밀번호(6자 이상)"
+                                        : "パスワード（6文字以上）"
+                                }
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 className="w-1/2 p-2 border rounded-md"
@@ -263,7 +269,11 @@ export default function PostPage({ params, searchParams }) {
 
                         <div className="flex gap-2">
                             <textarea
-                                placeholder="내용을 입력하세요."
+                                placeholder={
+                                    lang === "kr"
+                                        ? "내용을 입력하세요."
+                                        : "内容を入力してください。"
+                                }
                                 value={content}
                                 onChange={(e) => setContent(e.target.value)}
                                 className="w-4/5 p-2 border rounded-md h-20 resize-none"
@@ -277,7 +287,7 @@ export default function PostPage({ params, searchParams }) {
                                 }`}
                                 disabled={submitDisabled}
                             >
-                                작성
+                                {lang === "kr" ? "작성" : "投稿"}
                             </button>
                         </div>
                     </div>

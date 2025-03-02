@@ -36,7 +36,6 @@ async function fetchComments(postId) {
 async function addComment(postId, name, password, content) {
     const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/comments`;
     const payload = { postId, name, password, content };
-    // console.log(`addComment`, payload);
 
     try {
         const response = await fetch(apiUrl, {
@@ -71,6 +70,17 @@ function formatDate(date, lang) {
     return new Date(date).toLocaleDateString(lang, options);
 }
 
+// 댓글 수정 및 삭제 함수
+function handleEdit(commentId) {
+    console.log("수정할 댓글 ID:", commentId);
+    // 수정 로직을 추가 (예: 수정 폼을 보여주기)
+}
+
+function handleDelete(commentId) {
+    console.log("삭제할 댓글 ID:", commentId);
+    // 삭제 로직을 추가 (예: 삭제 요청 보내기)
+}
+
 // 댓글 렌더링 함수
 function renderComment(comment) {
     const commentStyle = {
@@ -90,8 +100,28 @@ function renderComment(comment) {
                 </p>
             </div>
             <p className="text-gray-600 mt-1">{comment.content}</p>
-            {comment && comment.length > 0 && (
-                <div>{comment.map((reply) => renderComment(reply))}</div>
+
+            {/* 수정/삭제 버튼 추가 */}
+            <div className="flex justify-end gap-1 text-sm">
+                <button
+                    onClick={() => handleEdit(comment.id)}
+                    className="border text-gray p-1 rounded-md hover-highlight-bg"
+                >
+                    수정
+                </button>
+                <button
+                    onClick={() => handleDelete(comment.id)}
+                    className="border text-gray p-1 rounded-md hover-highlight-bg"
+                >
+                    삭제
+                </button>
+            </div>
+
+            {/* 대댓글이 있을 경우 재귀적으로 댓글 렌더링 */}
+            {comment.replies && comment.replies.length > 0 && (
+                <div>
+                    {comment.replies.map((reply) => renderComment(reply))}
+                </div>
             )}
         </div>
     );
@@ -212,7 +242,7 @@ export default function PostPage({ params, searchParams }) {
                 </div>
                 <div className="h-full rounded-xl bg-white overflow-hidden shadow-md mt-10 p-6">
                     {/* 댓글 입력 폼 */}
-                    <div className="mb-6 rounded-lg mt-2">
+                    <div className="rounded-lg mt-2 mb-2">
                         <div className="flex gap-2 mb-2">
                             <input
                                 type="text"
@@ -240,7 +270,7 @@ export default function PostPage({ params, searchParams }) {
                             />
                             <button
                                 onClick={handleCommentSubmit}
-                                className={`w-1/5 bg-gray-400 text-white py-2 rounded-md hover-highlight-bg hover:text-gray-600 ${
+                                className={`w-1/5 bg-gray-400 text-white rounded-md hover-highlight-bg hover:text-gray-600 ${
                                     submitDisabled
                                         ? "opacity-50 cursor-not-allowed"
                                         : ""

@@ -26,10 +26,6 @@ const orbit = Orbit({
 const loadCategories = () => {
     return [
         {
-            name: "Personal",
-            slug: "personal",
-        },
-        {
             name: "Learning Notes",
             slug: "learning-notes",
         },

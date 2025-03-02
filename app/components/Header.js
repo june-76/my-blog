@@ -45,11 +45,14 @@ function HeaderContent({ categories }) {
     return (
         <header>
             <div className="header-links">
-                <Link href="/" className="site-link">
+                <Link
+                    href={language === "kr" ? "/" : "/?lang=jp"}
+                    className="site-link"
+                >
                     junefromjuly
                 </Link>
                 <Link
-                    href="/about"
+                    href={language === "kr" ? "/about" : "/about?lang=jp"}
                     className={`about-link ${
                         pathname === "/about" ? "highlight" : ""
                     }`}
@@ -58,6 +61,7 @@ function HeaderContent({ categories }) {
                     About
                 </Link>
             </div>
+
             <nav>
                 <ul className="category-list">
                     <li>

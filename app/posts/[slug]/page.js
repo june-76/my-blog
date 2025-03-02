@@ -32,6 +32,30 @@ async function fetchComments(postId) {
     }
 }
 
+// 댓글 추가 API 호출 함수
+async function addComment(postId, name, password, content) {
+    const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/comments`;
+    const payload = { postId, name, password, content };
+    // console.log(`addComment`, payload);
+
+    try {
+        const response = await fetch(apiUrl, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(payload),
+        });
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error("Fetch error:", error);
+        throw error;
+    }
+}
+
 // 날짜 포맷 함수 정의
 function formatDate(date, lang) {
     const options = {
@@ -49,7 +73,6 @@ function formatDate(date, lang) {
 
 // 댓글 렌더링 함수
 function renderComment(comment) {
-    // depth 값에 따라 왼쪽 여백을 조정
     const commentStyle = {
         paddingLeft: `${comment.depth * 2}rem`, // depth가 1이면 2rem, 2이면 4rem, 3이면 6rem...
     };
@@ -67,7 +90,6 @@ function renderComment(comment) {
                 </p>
             </div>
             <p className="text-gray-600 mt-1">{comment.content}</p>
-            {/* 대댓글이 있을 경우 재귀적으로 자식 댓글을 렌더링 */}
             {comment && comment.length > 0 && (
                 <div>{comment.map((reply) => renderComment(reply))}</div>
             )}
@@ -81,17 +103,18 @@ export default function PostPage({ params, searchParams }) {
     const [postData, setPostData] = useState(null);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [comments, setComments] = useState([]); // 댓글 상태
+    const [comments, setComments] = useState([]);
+    const [name, setName] = useState("작성자"); // 작성자 상태
+    const [password, setPassword] = useState(""); // 비밀번호 상태
+    const [content, setContent] = useState(""); // 댓글 내용 상태
+    const [submitDisabled, setSubmitDisabled] = useState(true); // 버튼 비활성화 상태
 
     useEffect(() => {
         async function loadPostData() {
             try {
-                // 포스트 데이터와 댓글을 동시에 가져오기
                 const postData = await fetchPostData(slug, lang);
                 setPostData(postData);
-
-                // 댓글 데이터 가져오기
-                const fetchedComments = await fetchComments(slug); // 슬러그를 postId로 사용
+                const fetchedComments = await fetchComments(slug);
                 setComments(fetchedComments);
             } catch (error) {
                 setError(error.message);
@@ -101,6 +124,34 @@ export default function PostPage({ params, searchParams }) {
         }
         loadPostData();
     }, [slug, lang]);
+
+    useEffect(() => {
+        // 유효성 검사: 작성자, 비밀번호, 댓글 내용이 조건을 만족하는지 체크
+        if (name.length > 0 && password.length >= 6 && content.length > 0) {
+            setSubmitDisabled(false);
+        } else {
+            setSubmitDisabled(true);
+        }
+    }, [name, password, content]);
+
+    const handleCommentSubmit = async () => {
+        if (!submitDisabled) {
+            try {
+                const newComment = await addComment(
+                    slug,
+                    name,
+                    password,
+                    content
+                );
+                setComments([...comments, newComment]); // 새 댓글 추가
+                setName(""); // 입력 값 초기화
+                setPassword("");
+                setContent("");
+            } catch (error) {
+                console.error("Error adding comment:", error);
+            }
+        }
+    };
 
     if (loading) {
         return <div className="grid p-20 place-items-center">Loading...</div>;
@@ -124,7 +175,7 @@ export default function PostPage({ params, searchParams }) {
 
     const {
         title,
-        content,
+        content: postContent,
         category: postCategory,
         date,
         description,
@@ -149,7 +200,7 @@ export default function PostPage({ params, searchParams }) {
                                 <div
                                     className="leading-relaxed text-gray-700"
                                     dangerouslySetInnerHTML={{
-                                        __html: content,
+                                        __html: postContent,
                                     }}
                                 ></div>
                                 <p className="text-gray-400 mt-8">
@@ -162,28 +213,40 @@ export default function PostPage({ params, searchParams }) {
                 <div className="h-full rounded-xl bg-white overflow-hidden shadow-md mt-10 p-6">
                     {/* 댓글 입력 폼 */}
                     <div className="mb-6 rounded-lg mt-2">
-                        {/* 이름 & 비밀번호 가로 배치 */}
                         <div className="flex gap-2 mb-2">
                             <input
                                 type="text"
                                 placeholder="작성자"
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
                                 className="w-1/2 p-2 border rounded-md"
                                 maxLength={20}
                             />
                             <input
                                 type="password"
                                 placeholder="비밀번호(6자 이상)"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
                                 className="w-1/2 p-2 border rounded-md"
                             />
                         </div>
 
-                        {/* 댓글 입력란 & 작성 버튼 가로 배치 */}
                         <div className="flex gap-2">
                             <textarea
                                 placeholder="내용을 입력하세요."
+                                value={content}
+                                onChange={(e) => setContent(e.target.value)}
                                 className="w-4/5 p-2 border rounded-md h-20 resize-none"
                             />
-                            <button className="w-1/5 bg-gray-400 text-white py-2 rounded-md hover-highlight-bg hover:text-gray-600">
+                            <button
+                                onClick={handleCommentSubmit}
+                                className={`w-1/5 bg-gray-400 text-white py-2 rounded-md hover-highlight-bg hover:text-gray-600 ${
+                                    submitDisabled
+                                        ? "opacity-50 cursor-not-allowed"
+                                        : ""
+                                }`}
+                                disabled={submitDisabled}
+                            >
                                 작성
                             </button>
                         </div>

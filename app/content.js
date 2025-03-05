@@ -106,7 +106,13 @@ export default function PageContent() {
                                 key={post.id}
                                 className="relative flex-col bg-clip-border rounded-l bg-f5f5f5 text-gray-700 shadow-none grid gap-2 sm:grid-cols-2"
                             >
-                                <div className="relative bg-clip-border rounded-l overflow-hidden text-gray-700 m-4 p-1">
+                                <div
+                                    className="relative bg-clip-border rounded-l overflow-hidden text-gray-700 m-4 p-1"
+                                    style={{
+                                        height: "auto",
+                                        aspectRatio: "3/2",
+                                    }}
+                                >
                                     <a
                                         href={`/posts/${post.id}?lang=${language}`}
                                         className="block w-full h-full"

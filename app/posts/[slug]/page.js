@@ -1,8 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import rehypeRaw from "rehype-raw";
 
-// 포스트 데이터를 가져오는 함수 정의
 async function fetchPostData(slug, lang) {
     const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/postContents?postId=${slug}&lang=${lang}`;
     try {
@@ -17,7 +20,6 @@ async function fetchPostData(slug, lang) {
     }
 }
 
-// 댓글 API 호출 함수
 async function fetchComments(postId) {
     const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/comments?postId=${postId}`;
     try {
@@ -32,7 +34,6 @@ async function fetchComments(postId) {
     }
 }
 
-// 댓글 추가 API 호출 함수
 async function addComment(postId, name, password, content) {
     const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/comments`;
     const payload = { postId, name, password, content };
@@ -55,7 +56,6 @@ async function addComment(postId, name, password, content) {
     }
 }
 
-// 날짜 포맷 함수 정의
 function formatDate(date, lang) {
     const options = {
         year: "numeric",
@@ -70,21 +70,9 @@ function formatDate(date, lang) {
     return new Date(date).toLocaleDateString(lang, options);
 }
 
-// 댓글 수정 및 삭제 함수
-function handleEdit(commentId) {
-    console.log("수정할 댓글 ID:", commentId);
-    // 수정 로직을 추가 (예: 수정 폼을 보여주기)
-}
-
-function handleDelete(commentId) {
-    console.log("삭제할 댓글 ID:", commentId);
-    // 삭제 로직을 추가 (예: 삭제 요청 보내기)
-}
-
-// 댓글 렌더링 함수
 function renderComment(comment) {
     const commentStyle = {
-        paddingLeft: `${comment.depth * 2}rem`, // depth가 1이면 2rem, 2이면 4rem, 3이면 6rem...
+        paddingLeft: `${comment.depth * 2}rem`,
     };
 
     return (
@@ -100,29 +88,6 @@ function renderComment(comment) {
                 </p>
             </div>
             <p className="text-gray-600 mt-1">{comment.content}</p>
-
-            {/* 수정/삭제 버튼 추가 */}
-            <div className="flex justify-end gap-1 text-sm">
-                <button
-                    onClick={() => handleEdit(comment.id)}
-                    className="border text-gray p-1 rounded-md hover-highlight-bg"
-                >
-                    수정
-                </button>
-                <button
-                    onClick={() => handleDelete(comment.id)}
-                    className="border text-gray p-1 rounded-md hover-highlight-bg"
-                >
-                    삭제
-                </button>
-            </div>
-
-            {/* 대댓글이 있을 경우 재귀적으로 댓글 렌더링 */}
-            {comment.replies && comment.replies.length > 0 && (
-                <div>
-                    {comment.replies.map((reply) => renderComment(reply))}
-                </div>
-            )}
         </div>
     );
 }
@@ -134,10 +99,10 @@ export default function PostPage({ params, searchParams }) {
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
     const [comments, setComments] = useState([]);
-    const [name, setName] = useState(lang === "kr" ? "작성자" : "作成者"); // 작성자 상태
-    const [password, setPassword] = useState(""); // 비밀번호 상태
-    const [content, setContent] = useState(""); // 댓글 내용 상태
-    const [submitDisabled, setSubmitDisabled] = useState(true); // 버튼 비활성화 상태
+    const [name, setName] = useState(lang === "kr" ? "작성자" : "作成者");
+    const [password, setPassword] = useState("");
+    const [content, setContent] = useState("");
+    const [submitDisabled, setSubmitDisabled] = useState(true);
 
     useEffect(() => {
         async function loadPostData() {
@@ -156,7 +121,6 @@ export default function PostPage({ params, searchParams }) {
     }, [slug, lang]);
 
     useEffect(() => {
-        // 유효성 검사: 작성자, 비밀번호, 댓글 내용이 조건을 만족하는지 체크
         if (name.length > 0 && password.length >= 6 && content.length > 0) {
             setSubmitDisabled(false);
         } else {
@@ -173,8 +137,8 @@ export default function PostPage({ params, searchParams }) {
                     password,
                     content
                 );
-                setComments([...comments, newComment]); // 새 댓글 추가
-                setName(""); // 입력 값 초기화
+                setComments([...comments, newComment]);
+                setName("");
                 setPassword("");
                 setContent("");
             } catch (error) {
@@ -227,12 +191,52 @@ export default function PostPage({ params, searchParams }) {
                                 <p className="leading-relaxed text-gray-500 mb-10 text-sm sm:text-base">
                                     {formatDate(date, lang)}
                                 </p>
-                                <div
-                                    className="leading-relaxed text-gray-700"
-                                    dangerouslySetInnerHTML={{
-                                        __html: postContent,
-                                    }}
-                                ></div>
+                                <div className="leading-relaxed text-gray-700">
+                                    <ReactMarkdown
+                                        children={postContent}
+                                        remarkPlugins={[remarkGfm]}
+                                        rehypePlugins={[rehypeRaw]}
+                                        components={{
+                                            code: ({
+                                                node,
+                                                inline,
+                                                className,
+                                                children,
+                                                ...props
+                                            }) => {
+                                                const language =
+                                                    className?.replace(
+                                                        "language-",
+                                                        ""
+                                                    );
+                                                return !inline ? (
+                                                    <SyntaxHighlighter
+                                                        language={language}
+                                                        children={String(
+                                                            children
+                                                        ).replace(/\n$/, "")}
+                                                    />
+                                                ) : (
+                                                    <code
+                                                        className={className}
+                                                        {...props}
+                                                    >
+                                                        {children}
+                                                    </code>
+                                                );
+                                            },
+                                            p: ({ node, children }) => (
+                                                <p
+                                                    style={{
+                                                        whiteSpace: "pre-line",
+                                                    }}
+                                                >
+                                                    {children}
+                                                </p>
+                                            ),
+                                        }}
+                                    />
+                                </div>
                                 <p className="text-gray-400 mt-8">
                                     {description}
                                 </p>
@@ -241,7 +245,6 @@ export default function PostPage({ params, searchParams }) {
                     </div>
                 </div>
                 <div className="h-full rounded-xl bg-white overflow-hidden shadow-md mt-10 p-6">
-                    {/* 댓글 입력 폼 */}
                     <div className="rounded-lg mt-2 mb-2">
                         <div className="flex gap-2 mb-2">
                             <input
@@ -266,7 +269,6 @@ export default function PostPage({ params, searchParams }) {
                                 className="w-1/2 p-2 border rounded-md"
                             />
                         </div>
-
                         <div className="flex gap-2">
                             <textarea
                                 placeholder={
@@ -280,19 +282,16 @@ export default function PostPage({ params, searchParams }) {
                             />
                             <button
                                 onClick={handleCommentSubmit}
-                                className={`w-1/5 bg-gray-400 text-white rounded-md hover-highlight-bg hover:text-gray-600 ${
-                                    submitDisabled
-                                        ? "opacity-50 cursor-not-allowed"
-                                        : ""
-                                }`}
+                                className={`w-1/5 bg-gray-400 text-white rounded-md hover-highlight-bg hover:text-gray-600 $$
+                                {submitDisabled
+                                    ? "opacity-50 cursor-not-allowed"
+                                    : ""}`}
                                 disabled={submitDisabled}
                             >
                                 {lang === "kr" ? "작성" : "投稿"}
                             </button>
                         </div>
                     </div>
-
-                    {/* 댓글 목록 */}
                     <div className="comments-section">
                         {comments.map((comment) => renderComment(comment))}
                     </div>

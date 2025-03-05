@@ -1,5 +1,3 @@
-// app/layout.js
-
 import "./globals.css";
 import Header from "./components/Header";
 import { Analytics } from "@vercel/analytics/react";
@@ -62,9 +60,9 @@ export default function RootLayout({ children }) {
                             © 2024 June. All rights reserved.
                         </p>
                         <div className="flex items-center justify-center space-x-4 text-sm/6 text-gray-500 md:justify-end">
-                            <a href="/">Privacy policy</a>
+                            <a href="">Privacy policy</a>
                             <div className="h-4 w-px bg-gray-200"></div>
-                            <a href="/">Terms</a>
+                            <a href="">Terms</a>
                         </div>
                     </div>
                 </footer>

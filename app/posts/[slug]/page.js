@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -10,9 +11,8 @@ async function fetchPostData(slug, lang) {
     const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/postContents?postId=${slug}&lang=${lang}`;
     try {
         const response = await fetch(apiUrl, { mode: "cors" });
-        if (!response.ok) {
+        if (!response.ok)
             throw new Error(`HTTP error! status: ${response.status}`);
-        }
         return await response.json();
     } catch (error) {
         console.error("Fetch error:", error);
@@ -24,9 +24,8 @@ async function fetchComments(postId) {
     const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/comments?postId=${postId}`;
     try {
         const response = await fetch(apiUrl, { mode: "cors" });
-        if (!response.ok) {
+        if (!response.ok)
             throw new Error(`HTTP error! status: ${response.status}`);
-        }
         return await response.json();
     } catch (error) {
         console.error("Fetch error:", error);
@@ -41,14 +40,11 @@ async function addComment(postId, name, password, content) {
     try {
         const response = await fetch(apiUrl, {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload),
         });
-        if (!response.ok) {
+        if (!response.ok)
             throw new Error(`HTTP error! status: ${response.status}`);
-        }
         return await response.json();
     } catch (error) {
         console.error("Fetch error:", error);
@@ -57,39 +53,15 @@ async function addComment(postId, name, password, content) {
 }
 
 function formatDate(date, lang) {
-    const options = {
+    return new Date(date).toLocaleDateString(lang, {
         year: "numeric",
         month: "long",
         day: "numeric",
         hour: "2-digit",
         minute: "2-digit",
         second: "2-digit",
-        hour12: false, // 24시간 형식 유지
-    };
-
-    return new Date(date).toLocaleDateString(lang, options);
-}
-
-function renderComment(comment) {
-    const commentStyle = {
-        paddingLeft: `${comment.depth * 2}rem`,
-    };
-
-    return (
-        <div
-            key={comment.id}
-            className="comment p-3 border-t border-gray-200"
-            style={commentStyle}
-        >
-            <div className="flex justify-between items-center">
-                <p className="font-semibold text-gray-700">{comment.name}</p>
-                <p className="text-gray-500 text-sm">
-                    {formatDate(comment.created_at, "kr")}
-                </p>
-            </div>
-            <p className="text-gray-600 mt-1">{comment.content}</p>
-        </div>
-    );
+        hour12: false,
+    });
 }
 
 export default function PostPage({ params, searchParams }) {
@@ -109,8 +81,7 @@ export default function PostPage({ params, searchParams }) {
             try {
                 const postData = await fetchPostData(slug, lang);
                 setPostData(postData);
-                const fetchedComments = await fetchComments(slug);
-                setComments(fetchedComments);
+                setComments(await fetchComments(slug));
             } catch (error) {
                 setError(error.message);
             } finally {
@@ -121,11 +92,9 @@ export default function PostPage({ params, searchParams }) {
     }, [slug, lang]);
 
     useEffect(() => {
-        if (name.length > 0 && password.length >= 6 && content.length > 0) {
-            setSubmitDisabled(false);
-        } else {
-            setSubmitDisabled(true);
-        }
+        setSubmitDisabled(
+            !(name.length > 0 && password.length >= 6 && content.length > 0)
+        );
     }, [name, password, content]);
 
     const handleCommentSubmit = async () => {
@@ -147,30 +116,22 @@ export default function PostPage({ params, searchParams }) {
         }
     };
 
-    if (loading) {
+    if (loading)
         return <div className="grid p-20 place-items-center">Loading...</div>;
-    }
-
-    if (error) {
-        return <div>Error: {error}</div>;
-    }
-
-    if (!postData) {
+    if (error) return <div>Error: {error}</div>;
+    if (!postData)
         return (
             <div>
                 {lang === "kr"
                     ? "포스트를 찾을 수 없습니다."
-                    : lang === "jp"
-                    ? "投稿がありません。"
                     : "Post not found."}
             </div>
         );
-    }
 
     const {
         title,
         content: postContent,
-        category: postCategory,
+        postCategory,
         date,
         description,
     } = postData;
@@ -193,17 +154,15 @@ export default function PostPage({ params, searchParams }) {
                                 </p>
                                 <div className="leading-relaxed text-gray-700">
                                     <ReactMarkdown
-                                        children={postContent}
                                         remarkPlugins={[remarkGfm]}
                                         rehypePlugins={[rehypeRaw]}
                                         components={{
-                                            code: ({
-                                                node,
+                                            code({
                                                 inline,
                                                 className,
                                                 children,
                                                 ...props
-                                            }) => {
+                                            }) {
                                                 const language =
                                                     className?.replace(
                                                         "language-",
@@ -212,10 +171,11 @@ export default function PostPage({ params, searchParams }) {
                                                 return !inline ? (
                                                     <SyntaxHighlighter
                                                         language={language}
-                                                        children={String(
+                                                    >
+                                                        {String(
                                                             children
                                                         ).replace(/\n$/, "")}
-                                                    />
+                                                    </SyntaxHighlighter>
                                                 ) : (
                                                     <code
                                                         className={className}
@@ -225,17 +185,33 @@ export default function PostPage({ params, searchParams }) {
                                                     </code>
                                                 );
                                             },
-                                            p: ({ node, children }) => (
-                                                <p
-                                                    style={{
-                                                        whiteSpace: "pre-line",
-                                                    }}
-                                                >
-                                                    {children}
-                                                </p>
-                                            ),
+                                            p({ children }) {
+                                                return (
+                                                    <p
+                                                        style={{
+                                                            whiteSpace:
+                                                                "pre-line",
+                                                        }}
+                                                    >
+                                                        {children}
+                                                    </p>
+                                                );
+                                            },
+                                            img({ src, alt }) {
+                                                return (
+                                                    <Image
+                                                        src={src}
+                                                        alt={alt}
+                                                        width={600}
+                                                        height={400}
+                                                        layout="responsive"
+                                                    />
+                                                );
+                                            },
                                         }}
-                                    />
+                                    >
+                                        {postContent}
+                                    </ReactMarkdown>
                                 </div>
                                 <p className="text-gray-400 mt-8">
                                     {description}

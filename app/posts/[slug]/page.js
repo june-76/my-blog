@@ -202,9 +202,17 @@ export default function PostPage({ params, searchParams }) {
                                                     <Image
                                                         src={src}
                                                         alt={alt}
-                                                        width={600}
-                                                        height={400}
-                                                        layout="responsive"
+                                                        width={0}
+                                                        height={0}
+                                                        sizes="100vw"
+                                                        style={{
+                                                            maxWidth: "100%",
+                                                            maxHeight: "500px",
+                                                            width: "auto",
+                                                            height: "auto",
+                                                            display: "block",
+                                                            margin: "0 auto",
+                                                        }}
                                                     />
                                                 );
                                             },
